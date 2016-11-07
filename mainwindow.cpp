@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "logger.h"
 
 #include <QGraphicsView>
 #include <QApplication>
@@ -12,6 +13,7 @@
 
 MainWindow::MainWindow() : QMainWindow(0)
 {
+    Logger::log("Starting game");
     scene = new GraphicsScene(0, 0, 750, 400);
     setWindowState(Qt::WindowFullScreen);
 

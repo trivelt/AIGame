@@ -1,5 +1,6 @@
 #include "graphicsscene.h"
 #include "pixmapitem.h"
+#include "logger.h"
 
 GraphicsScene::GraphicsScene(int x, int y, int width, int height)
     : QGraphicsScene(x , y, width, height)
@@ -12,7 +13,7 @@ GraphicsScene::GraphicsScene(int x, int y, int width, int height)
 
 void GraphicsScene::setupScene()
 {
-
+    Logger::log("Setupping graphics scene");
 }
 
 void GraphicsScene::addItem(QGraphicsItem *item)

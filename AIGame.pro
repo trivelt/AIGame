@@ -15,10 +15,12 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     graphicsscene.cpp \
-    pixmapitem.cpp
+    pixmapitem.cpp \
+    logger.cpp
 
 HEADERS  += mainwindow.h \
     graphicsscene.h \
-    pixmapitem.h
+    pixmapitem.h \
+    logger.h
 
 FORMS    +=

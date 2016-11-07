@@ -1,10 +1,12 @@
 #include "pixmapitem.h"
+#include "logger.h"
+
 #include <QPainter>
 #include <QDebug>
 
 PixmapItem::PixmapItem(const QString &fileName, QGraphicsItem * parent) : QGraphicsObject(parent)
 {
-    qDebug() << "Creating new PixMapItem from file " << fileName;
+    Logger::log("Creating new PixMapItem from file '" + fileName + "'");
     pix  = QPixmap(QStringLiteral(":/") + fileName);
 }
 
