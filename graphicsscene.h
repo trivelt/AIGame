@@ -27,6 +27,7 @@ public slots:
     void updateScene();
 
 private:
+    void goHero(int x, int y, int steps);
     void addItem(QGraphicsItem *item);
     bool collideWithPoint(PixmapItem *item, QPoint translationVector);
 

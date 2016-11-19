@@ -95,15 +95,36 @@ void GraphicsScene::clearScene()
 
 void GraphicsScene::goDown()
 {
-    for(int i=0;i <10; i++)
+    goHero(0, 1, 10);
+}
+
+void GraphicsScene::goUp()
+{
+    goHero(0, -1, 10);
+}
+
+void GraphicsScene::goRight()
+{
+    goHero(1, 0, 10);
+}
+
+void GraphicsScene::goLeft()
+{
+    goHero(-1, 0, 10);
+}
+
+void GraphicsScene::goHero(int x, int y, int steps)
+{
+    for(int i=0;i <steps; i++)
     {
-        if(!collideWithPoint(kolko1, QPoint(0, 1)))
+        if(!collideWithPoint(kolko1, QPoint(x, y)))
         {
 
             QPointF posPoint = kolko1->pos();
+            int xPos = posPoint.x();
             int yPos = posPoint.y();
-            kolko1->setPos(posPoint.x(), yPos+1);
-            textItem->setHtml("x=" + QString::number(posPoint.x()) + ", y=" + QString::number(yPos));
+            kolko1->setPos(xPos+x, yPos+y);
+            textItem->setHtml("x=" + QString::number(xPos+x) + ", y=" + QString::number(yPos+y));
         }
         else
         {
@@ -111,30 +132,6 @@ void GraphicsScene::goDown()
         }
     }
 
-}
-
-void GraphicsScene::goUp()
-{
-    QPointF posPoint = kolko1->pos();
-    int yPos = posPoint.y();
-    kolko1->setPos(posPoint.x(), yPos-10);
-    textItem->setHtml("x=" + QString::number(posPoint.x()) + ", y=" + QString::number(yPos));
-}
-
-void GraphicsScene::goRight()
-{
-    QPointF posPoint = kolko1->pos();
-    int xPos = posPoint.x();
-    kolko1->setPos(xPos+10,posPoint.y());
-    textItem->setHtml("x=" + QString::number(xPos) + ", y=" + QString::number(posPoint.y()));
-}
-
-void GraphicsScene::goLeft()
-{
-    QPointF posPoint = kolko1->pos();
-    int xPos = posPoint.x();
-    kolko1->setPos(xPos-10,posPoint.y());
-    textItem->setHtml("x=" + QString::number(xPos) + ", y=" + QString::number(posPoint.y()));
 }
 
 void GraphicsScene::addItem(QGraphicsItem *item)
@@ -165,6 +162,7 @@ bool GraphicsScene::collideWithPoint(PixmapItem *item, QPoint translationVector)
             continue;
         QRectF otherRect = otherItem->boundingRect();
         otherRect.translate(otherItem->pos());
+//        otherItem->sceneBoundingRect()
 
         int otherLeft = otherRect.left();
         int otherTop = otherRect.top();
