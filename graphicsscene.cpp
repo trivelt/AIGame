@@ -158,6 +158,15 @@ bool GraphicsScene::collideWithPoint(PixmapItem *item, QPoint translationVector)
     int itemRight = itemPos.x() + itemWidth + translationX;
     int itemBottom = itemPos.y() + itemHeight + translationY;
 
+    QRect screenGeometry = QApplication::desktop()->screenGeometry();
+    if(itemLeft < 0
+        || itemRight > screenGeometry.width()
+        || itemTop < 0
+        || itemBottom > screenGeometry.height())
+    {
+        return true;
+    }
+
     bool collide = false;
 
     foreach (QGraphicsItem* otherItem, items())
