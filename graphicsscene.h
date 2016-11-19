@@ -19,10 +19,20 @@ public:
     void updateScene();
     void clearScene();
 
+    void goUp();
+    void goDown();
+    void goLeft();
+    void goRight();
+
+public slots:
+    void updateSc();
+
 private:
     void addItem(QGraphicsItem *item);
 
     PixmapItem *kolko1;
+    PixmapItem *enemy1;
+    QGraphicsTextItem *textItem;
 
 };
 
