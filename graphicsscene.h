@@ -29,7 +29,10 @@ public slots:
 private:
     void goHero(int x, int y, int steps);
     void addItem(QGraphicsItem *item);
-    bool collideWithPoint(PixmapItem *item, QPoint translationVector);
+    bool collideWithObjects(PixmapItem *item, QPoint translationVector);
+    bool collideWithBorders(QRect rect);
+    bool collideWithObjectsInScene(PixmapItem* item, QRect rect);
+    QRect getRectAfterTranslation(PixmapItem *item, QPoint translationVector);
 
     PixmapItem *kolko1;
     PixmapItem *enemy1;

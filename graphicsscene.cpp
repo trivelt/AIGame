@@ -121,7 +121,7 @@ void GraphicsScene::goHero(int x, int y, int steps)
 {
     for(int i=0;i <steps; i++)
     {
-        if(!collideWithPoint(kolko1, QPoint(x, y)))
+        if(!collideWithObjects(kolko1, QPoint(x, y)))
         {
 
             QPointF posPoint = kolko1->pos();
@@ -143,51 +143,54 @@ void GraphicsScene::addItem(QGraphicsItem *item)
     QGraphicsScene::addItem(item);
 }
 
-bool GraphicsScene::collideWithPoint(PixmapItem *item, QPoint translationVector)
+bool GraphicsScene::collideWithObjects(PixmapItem *item, QPoint translationVector)
 {
-    QPointF itemPos = item->pos();
-    int translationX = translationVector.x();
-    int translationY = translationVector.y();
+    QRect newRect = getRectAfterTranslation(item, translationVector);
+    return collideWithBorders(newRect) || collideWithObjectsInScene(item, newRect);
+}
 
-    QSizeF itemSize = item->size();
-    int itemWidth = itemSize.width();
-    int itemHeight = itemSize.height();
-
-    int itemLeft = itemPos.x() + translationX;
-    int itemTop = itemPos.y() + translationY;
-    int itemRight = itemPos.x() + itemWidth + translationX;
-    int itemBottom = itemPos.y() + itemHeight + translationY;
-
+bool GraphicsScene::collideWithBorders(QRect rect)
+{
     QRect screenGeometry = QApplication::desktop()->screenGeometry();
-    if(itemLeft < 0
-        || itemRight > screenGeometry.width()
-        || itemTop < 0
-        || itemBottom > screenGeometry.height())
-    {
-        return true;
-    }
+    return (rect.left() < 0
+            || rect.right() > screenGeometry.width()
+            || rect.top() < 0
+            || rect.bottom() > screenGeometry.height());
+}
 
+bool GraphicsScene::collideWithObjectsInScene(PixmapItem* item, QRect rect)
+{
     bool collide = false;
 
     foreach (QGraphicsItem* otherItem, items())
     {
         if(otherItem == item)
             continue;
-        QRectF otherRect = otherItem->boundingRect();
-        otherRect.translate(otherItem->pos());
-//        otherItem->sceneBoundingRect()
+        QRectF otherRect = otherItem->sceneBoundingRect();
 
-        int otherLeft = otherRect.left();
-        int otherTop = otherRect.top();
-        int otherRight = otherRect.right();
-        int otherBottom = otherRect.bottom();
-
-        collide = !(otherLeft > itemRight
-                    || otherRight < itemLeft
-                    || otherTop > itemBottom
-                    || otherBottom < itemTop);
+        collide = !(otherRect.left() > rect.right()
+                    || otherRect.right() < rect.left()
+                    || otherRect.top() > rect.bottom()
+                    || otherRect.bottom() < rect.top());
         if(collide)
             return true;
     }
     return false;
+}
+
+QRect GraphicsScene::getRectAfterTranslation(PixmapItem *item, QPoint translationVector)
+{
+    QPointF itemPos = item->pos();
+    int translationX = translationVector.x();
+    int translationY = translationVector.y();
+
+    int itemLeft = itemPos.x() + translationX;
+    int itemTop = itemPos.y() + translationY;
+
+    QSizeF itemSize = item->size();
+    int itemWidth = itemSize.width();
+    int itemHeight = itemSize.height();
+
+    QRect newRect(itemLeft, itemTop, itemWidth, itemHeight);
+    return newRect;
 }
