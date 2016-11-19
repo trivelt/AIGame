@@ -13,17 +13,21 @@ GraphicsScene::GraphicsScene(int x, int y, int width, int height)
     int screenWidth = screenGeometry.width();
     int screenHeight = screenGeometry.height();
 
-    kolko1 = new PixmapItem(QString("kolko1"));
+    kolko1 = new PixmapItem(QString("hero"));
     kolko1->setPos(0,0);
     addItem(kolko1);
 
-    enemy1 = new PixmapItem(QString("kolko1"));
+    enemy1 = new PixmapItem(QString("enemy"));
     enemy1->setPos(0,200);
     addItem(enemy1);
 
-    QGraphicsRectItem* rect = new QGraphicsRectItem(300, 100, 300, 80);
+    QGraphicsRectItem* rect = new QGraphicsRectItem(screenWidth/6, screenHeight/9, 300, 80);
     rect->setBrush(Qt::green);
     addItem(rect);
+
+    QGraphicsRectItem* rect2 = new QGraphicsRectItem(screenWidth/6, 7*screenHeight/9, 300, 80);
+    rect2->setBrush(Qt::green);
+    addItem(rect2);
 
     textItem = new QGraphicsTextItem();
     textItem->setPos(screenWidth/2, screenHeight-80);
