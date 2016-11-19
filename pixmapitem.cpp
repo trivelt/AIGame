@@ -6,8 +6,9 @@
 
 PixmapItem::PixmapItem(const QString &fileName, QGraphicsItem * parent) : QGraphicsObject(parent)
 {
-    Logger::log("Creating new PixMapItem from file '" + fileName + "'");
     pix  = QPixmap(QStringLiteral(":/") + fileName);
+    Logger::log("Creating new PixMapItem from file '" + fileName + "', size=" +
+            QString::number(pix.width()) + "x" + QString::number(pix.height()));
 }
 
 PixmapItem::PixmapItem(const QString &fileName, QGraphicsScene *scene) : QGraphicsObject(), pix(fileName)
