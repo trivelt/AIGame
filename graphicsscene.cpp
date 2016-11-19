@@ -1,11 +1,10 @@
 #include "graphicsscene.h"
-#include "pixmapitem.h"
 #include "logger.h"
 
 GraphicsScene::GraphicsScene(int x, int y, int width, int height)
     : QGraphicsScene(x , y, width, height)
 {
-    PixmapItem *kolko1 = new PixmapItem(QString("kolko1"));
+    kolko1 = new PixmapItem(QString("kolko1"));
     kolko1->setPos(0,0);
     addItem(kolko1);
 
@@ -15,17 +14,34 @@ GraphicsScene::GraphicsScene(int x, int y, int width, int height)
 //    addItem(backgroundItem);
 }
 
+GraphicsScene::~GraphicsScene()
+{
+    delete kolko1;
+    kolko1 = nullptr;
+}
+
 void GraphicsScene::setupScene()
 {
     Logger::log("Setupping graphics scene");
 }
 
-void GraphicsScene::addItem(QGraphicsItem *item)
+
+void GraphicsScene::updateScene()
 {
-    QGraphicsScene::addItem(item);
+    Logger::log("Updating scene");
+    QPointF posPoint = kolko1->pos();
+    int xPos = posPoint.x();
+    kolko1->setPos(xPos+10,posPoint.y());
 }
+
 
 void GraphicsScene::clearScene()
 {
 
+}
+
+
+void GraphicsScene::addItem(QGraphicsItem *item)
+{
+    QGraphicsScene::addItem(item);
 }

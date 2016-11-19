@@ -16,12 +16,14 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     graphicsscene.cpp \
     pixmapitem.cpp \
-    logger.cpp
+    logger.cpp \
+    graphicsview.cpp
 
 HEADERS  += mainwindow.h \
     graphicsscene.h \
     pixmapitem.h \
-    logger.h
+    logger.h \
+    graphicsview.h
 
 
 RESOURCES += \

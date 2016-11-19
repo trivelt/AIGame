@@ -4,6 +4,7 @@
 #include <QtWidgets/QMainWindow>
 #include <QGraphicsView>
 #include "graphicsscene.h"
+#include "graphicsview.h"
 
 class MainWindow : public QMainWindow
 {
@@ -13,7 +14,7 @@ public:
 
 private:
     GraphicsScene *scene;
-    QGraphicsView *view;
+    GraphicsView *view;
 };
 
 #endif //__MAINWINDOW__H__

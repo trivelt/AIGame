@@ -6,15 +6,24 @@
 #include <QtCore/QState>
 #include <QAction>
 
+#include "pixmapitem.h"
+
 class GraphicsScene : public QGraphicsScene
 {
 Q_OBJECT
 public:
 
     GraphicsScene(int x, int y, int width, int height);
+    ~GraphicsScene();
     void setupScene();
-    void addItem(QGraphicsItem *item);
+    void updateScene();
     void clearScene();
+
+private:
+    void addItem(QGraphicsItem *item);
+
+    PixmapItem *kolko1;
+
 };
 
 #endif //__GRAPHICSSCENE__H__

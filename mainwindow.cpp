@@ -17,7 +17,7 @@ MainWindow::MainWindow() : QMainWindow(0)
     scene = new GraphicsScene(0, 0, 750, 400);
     setWindowState(Qt::WindowFullScreen);
 
-    view = new QGraphicsView(scene, this);
+    view = new GraphicsView(scene, this);
     view->setAlignment(Qt::AlignLeft | Qt::AlignTop);
     scene->setupScene();
     view->setBackgroundBrush(QBrush(Qt::red, Qt::SolidPattern));

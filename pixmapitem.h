@@ -1,8 +1,9 @@
 #ifndef __PIXMAPITEM__H__
 #define __PIXMAPITEM__H__
 
-#include "graphicsscene.h"
+//#include "graphicsscene.h"
 #include <QtWidgets/QGraphicsObject>
+#include <QGraphicsScene>
 
 class PixmapItem : public QGraphicsObject
 {
