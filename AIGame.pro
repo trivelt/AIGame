@@ -23,4 +23,6 @@ HEADERS  += mainwindow.h \
     pixmapitem.h \
     logger.h
 
-FORMS    +=
+
+RESOURCES += \
+    images.qrc

@@ -20,6 +20,8 @@ MainWindow::MainWindow() : QMainWindow(0)
     view = new QGraphicsView(scene, this);
     view->setAlignment(Qt::AlignLeft | Qt::AlignTop);
     scene->setupScene();
+    view->setBackgroundBrush(QBrush(Qt::red, Qt::SolidPattern));
+
 
 
 //#ifndef QT_NO_OPENGL
