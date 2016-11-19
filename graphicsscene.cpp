@@ -43,20 +43,10 @@ GraphicsScene::~GraphicsScene()
 
 void GraphicsScene::setupScene()
 {
-    QTimer::singleShot(100, this, SLOT(updateSc()));
+    QTimer::singleShot(100, this, SLOT(updateScene()));
 }
-
 
 void GraphicsScene::updateScene()
-{
-//    Logger::log("Updating scene");
-    QPointF posPoint = kolko1->pos();
-    int xPos = posPoint.x();
-    kolko1->setPos(xPos+10,posPoint.y());
-    textItem->setHtml("x=" + QString::number(xPos) + ", y=" + QString::number(posPoint.y()));
-}
-
-void GraphicsScene::updateSc()
 {
     static bool yourTurn = false;
     yourTurn = !yourTurn;
@@ -99,7 +89,7 @@ void GraphicsScene::updateSc()
     }
 //    kolko1->setPos(posPoint.x(), yPos+5);
 //    textItem->setHtml("x=" + QString::number(posPoint.x()) + ", y=" + QString::number(yPos));
-    QTimer::singleShot(10, this, SLOT(updateSc()));
+    QTimer::singleShot(10, this, SLOT(updateScene()));
 
 }
 

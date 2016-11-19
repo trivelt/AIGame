@@ -16,7 +16,6 @@ public:
     GraphicsScene(int x, int y, int width, int height);
     ~GraphicsScene();
     void setupScene();
-    void updateScene();
     void clearScene();
 
     void goUp();
@@ -25,7 +24,7 @@ public:
     void goRight();
 
 public slots:
-    void updateSc();
+    void updateScene();
 
 private:
     void addItem(QGraphicsItem *item);
