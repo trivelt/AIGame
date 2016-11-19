@@ -28,11 +28,11 @@ public slots:
 
 private:
     void addItem(QGraphicsItem *item);
+    bool collideWithPoint(PixmapItem *item, QPoint translationVector);
 
     PixmapItem *kolko1;
     PixmapItem *enemy1;
     QGraphicsTextItem *textItem;
-
 };
 
 #endif //__GRAPHICSSCENE__H__

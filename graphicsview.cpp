@@ -11,7 +11,7 @@ GraphicsView::GraphicsView(QGraphicsScene *scene, QWidget *parent) :
 
 void GraphicsView::keyPressEvent(QKeyEvent *event)
 {
-    Logger::log("keyPressEvent " + event->text());
+//    Logger::log("keyPressEvent " + event->text());
     GraphicsScene* gScene = (GraphicsScene*)scene();
     int key = event->key();
 
