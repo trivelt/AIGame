@@ -7,6 +7,7 @@
 #include <QAction>
 
 #include "hero.h"
+#include "enemy.h"
 
 class PixmapItem;
 
@@ -20,13 +21,12 @@ public:
     void setupScene();
     void clearScene();
 
-    void addItem(QGraphicsItem *item);
     QGraphicsTextItem* getTextView();
+    Hero* getHero();
+
+    void addItem(QGraphicsItem *item);
     bool collideWithObjects(PixmapItem *item, QPoint translationVector);
     void processHeroMove(QKeyEvent* event);
-
-public slots:
-    void updateScene();
 
 private:
     bool collideWithBorders(QRect rect);
@@ -34,7 +34,7 @@ private:
     QRect getRectAfterTranslation(PixmapItem *item, QPoint translationVector);
 
     Hero *hero;
-    PixmapItem *enemy1;
+    Enemy *enemy1;
     QGraphicsTextItem *textItem;
 };
 

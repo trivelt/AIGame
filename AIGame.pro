@@ -19,7 +19,8 @@ SOURCES += main.cpp\
     logger.cpp \
     graphicsview.cpp \
     utils.cpp \
-    hero.cpp
+    hero.cpp \
+    enemy.cpp
 
 HEADERS  += mainwindow.h \
     graphicsscene.h \
@@ -27,7 +28,8 @@ HEADERS  += mainwindow.h \
     logger.h \
     graphicsview.h \
     utils.h \
-    hero.h
+    hero.h \
+    enemy.h
 
 
 RESOURCES += \

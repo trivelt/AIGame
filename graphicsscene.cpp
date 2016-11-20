@@ -1,8 +1,8 @@
 #include "graphicsscene.h"
 #include "logger.h"
-#include <QTimer>
 #include "utils.h"
-#include "hero.h"
+
+#include <QTimer>
 #include <QApplication>
 #include <QRect>
 #include <QDesktopWidget>
@@ -17,7 +17,7 @@ GraphicsScene::GraphicsScene(int x, int y, int width, int height)
     hero = new Hero(this);
     hero->setPos(0,0);
 
-    enemy1 = new PixmapItem(QString("enemy"), this);
+    enemy1 = new Enemy(this);
     enemy1->setPos(0,200);
 
     QGraphicsRectItem* rect = new QGraphicsRectItem(screenWidth/6, screenHeight/9, 300, 80);
@@ -47,53 +47,11 @@ GraphicsScene::~GraphicsScene()
 
 void GraphicsScene::setupScene()
 {
-    QTimer::singleShot(100, this, SLOT(updateScene()));
+    QTimer::singleShot(100, enemy1, SLOT(updateEnemy()));
 }
-
-void GraphicsScene::updateScene()
-{
-    static bool yourTurn = false;
-    yourTurn = !yourTurn;
-
-    if(yourTurn)
-    {
-        QPointF positionOfHero = hero->pos();
-        int xPosHero = positionOfHero.x();
-        int yPosHero = positionOfHero.y();
-
-
-        QPointF posPoint = enemy1->pos();
-        int xPos = posPoint.x();
-        int yPos = posPoint.y();
-        if(xPos > xPosHero)
-        {
-            xPos--;
-        }
-        else if(xPos < xPosHero)
-        {
-            xPos++;
-        }
-
-        if(yPos > yPosHero)
-        {
-            yPos--;
-        }
-        else if(yPos < yPosHero)
-        {
-            yPos++;
-        }
-
-        enemy1->setPos(xPos, yPos);
-    }
-
-    QTimer::singleShot(10, this, SLOT(updateScene()));
-
-}
-
 
 void GraphicsScene::clearScene()
 {
-
 }
 
 void GraphicsScene::processHeroMove(QKeyEvent *event)
@@ -109,6 +67,11 @@ void GraphicsScene::addItem(QGraphicsItem *item)
 QGraphicsTextItem* GraphicsScene::getTextView()
 {
     return textItem;
+}
+
+Hero* GraphicsScene::getHero()
+{
+    return hero;
 }
 
 bool GraphicsScene::collideWithObjects(PixmapItem *item, QPoint translationVector)
