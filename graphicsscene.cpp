@@ -111,6 +111,7 @@ bool GraphicsScene::collideWithObjectsInScene(PixmapItem* item, QRect rect)
 
 QRect GraphicsScene::getRectAfterTranslation(PixmapItem *item, QPoint translationVector)
 {
+    QSizeF itemSize = item->size();
     QPointF itemPos = item->pos();
     int translationX = translationVector.x();
     int translationY = translationVector.y();
@@ -118,10 +119,11 @@ QRect GraphicsScene::getRectAfterTranslation(PixmapItem *item, QPoint translatio
     int itemLeft = itemPos.x() + translationX;
     int itemTop = itemPos.y() + translationY;
 
-    QSizeF itemSize = item->size();
-    int itemWidth = itemSize.width();
-    int itemHeight = itemSize.height();
+    QRect newRect;
+    newRect.setLeft(itemLeft);
+    newRect.setTop(itemTop);
+    newRect.setRight(itemLeft+itemSize.width());
+    newRect.setBottom(itemTop+itemSize.height());
 
-    QRect newRect(itemLeft, itemTop, itemWidth, itemHeight);
     return newRect;
 }

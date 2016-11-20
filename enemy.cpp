@@ -1,5 +1,6 @@
 #include "enemy.h"
 #include "graphicsscene.h"
+#include "logger.h"
 #include <QTimer>
 
 Enemy::Enemy(GraphicsScene *scene) : PixmapItem(QString("enemy"), scene)
@@ -21,25 +22,30 @@ void Enemy::updateEnemy()
         QPointF posPoint = pos();
         int xPos = posPoint.x();
         int yPos = posPoint.y();
+        int xMove = 0;
+        int yMove = 0;
         if(xPos > xPosHero)
         {
-            xPos--;
+            xMove--;
         }
         else if(xPos < xPosHero)
         {
-            xPos++;
+            xMove++;
         }
 
         if(yPos > yPosHero)
         {
-            yPos--;
+            yMove--;
         }
         else if(yPos < yPosHero)
         {
-            yPos++;
+            yMove++;
         }
 
-        setPos(xPos, yPos);
+        if(!scene->collideWithObjects(this, QPoint(xMove, yMove)))
+        {
+            setPos(xPos+xMove, yPos+yMove);
+        }
     }
 
     QTimer::singleShot(10, this, SLOT(updateEnemy()));
