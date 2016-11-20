@@ -46,6 +46,22 @@ void Enemy::updateEnemy()
         {
             setPos(xPos+xMove, yPos+yMove);
         }
+        else
+        {
+            int trials=5;
+            while(trials)
+            {
+                int randX = qrand() % 4;
+                int randY = qrand() % 4;
+                if(!scene->collideWithObjects(this, QPoint(randX, randY)))
+                {
+                    Logger::log("rands=" + QString::number(randX) +", " + QString::number(randY));
+                    setPos(xPos+randX, yPos+randY);
+                    break;
+                }
+                trials--;
+            }
+        }
     }
 
     QTimer::singleShot(10, this, SLOT(updateEnemy()));
