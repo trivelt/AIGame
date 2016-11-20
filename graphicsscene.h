@@ -6,7 +6,9 @@
 #include <QtCore/QState>
 #include <QAction>
 
-#include "pixmapitem.h"
+#include "hero.h"
+
+class PixmapItem;
 
 class GraphicsScene : public QGraphicsScene
 {
@@ -18,23 +20,20 @@ public:
     void setupScene();
     void clearScene();
 
-    void goUp();
-    void goDown();
-    void goLeft();
-    void goRight();
+    void addItem(QGraphicsItem *item);
+    QGraphicsTextItem* getTextView();
+    bool collideWithObjects(PixmapItem *item, QPoint translationVector);
+    void processHeroMove(QKeyEvent* event);
 
 public slots:
     void updateScene();
 
 private:
-    void goHero(int x, int y, int steps);
-    void addItem(QGraphicsItem *item);
-    bool collideWithObjects(PixmapItem *item, QPoint translationVector);
     bool collideWithBorders(QRect rect);
     bool collideWithObjectsInScene(PixmapItem* item, QRect rect);
     QRect getRectAfterTranslation(PixmapItem *item, QPoint translationVector);
 
-    PixmapItem *kolko1;
+    Hero *hero;
     PixmapItem *enemy1;
     QGraphicsTextItem *textItem;
 };

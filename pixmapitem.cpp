@@ -1,19 +1,18 @@
 #include "pixmapitem.h"
+#include "graphicsscene.h"
 #include "logger.h"
 
 #include <QPainter>
 #include <QDebug>
 
-PixmapItem::PixmapItem(const QString &fileName, QGraphicsItem * parent) : QGraphicsObject(parent)
+PixmapItem::PixmapItem(const QString &fileName, GraphicsScene *scene) : QGraphicsObject()
 {
+    scene->addItem(this);
+    this->scene = scene;
+
     pix  = QPixmap(QStringLiteral(":/") + fileName);
     Logger::log("Creating new PixMapItem from file '" + fileName + "', size=" +
             QString::number(pix.width()) + "x" + QString::number(pix.height()));
-}
-
-PixmapItem::PixmapItem(const QString &fileName, QGraphicsScene *scene) : QGraphicsObject(), pix(fileName)
-{
-    scene->addItem(this);
 }
 
 QSizeF PixmapItem::size() const

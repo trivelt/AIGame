@@ -2,6 +2,7 @@
 #include "logger.h"
 #include <QTimer>
 #include "utils.h"
+#include "hero.h"
 #include <QApplication>
 #include <QRect>
 #include <QDesktopWidget>
@@ -13,13 +14,11 @@ GraphicsScene::GraphicsScene(int x, int y, int width, int height)
     int screenWidth = screenGeometry.width();
     int screenHeight = screenGeometry.height();
 
-    kolko1 = new PixmapItem(QString("hero"));
-    kolko1->setPos(0,0);
-    addItem(kolko1);
+    hero = new Hero(this);
+    hero->setPos(0,0);
 
-    enemy1 = new PixmapItem(QString("enemy"));
+    enemy1 = new PixmapItem(QString("enemy"), this);
     enemy1->setPos(0,200);
-    addItem(enemy1);
 
     QGraphicsRectItem* rect = new QGraphicsRectItem(screenWidth/6, screenHeight/9, 300, 80);
     rect->setBrush(Qt::green);
@@ -40,8 +39,8 @@ GraphicsScene::GraphicsScene(int x, int y, int width, int height)
 
 GraphicsScene::~GraphicsScene()
 {
-    delete kolko1;
-    kolko1 = nullptr;
+    delete hero;
+    hero = nullptr;
     delete enemy1;
     enemy1 = nullptr;
 }
@@ -58,7 +57,7 @@ void GraphicsScene::updateScene()
 
     if(yourTurn)
     {
-        QPointF positionOfHero = kolko1->pos();
+        QPointF positionOfHero = hero->pos();
         int xPosHero = positionOfHero.x();
         int yPosHero = positionOfHero.y();
 
@@ -97,50 +96,19 @@ void GraphicsScene::clearScene()
 
 }
 
-void GraphicsScene::goDown()
+void GraphicsScene::processHeroMove(QKeyEvent *event)
 {
-    goHero(0, 1, 10);
-}
-
-void GraphicsScene::goUp()
-{
-    goHero(0, -1, 10);
-}
-
-void GraphicsScene::goRight()
-{
-    goHero(1, 0, 10);
-}
-
-void GraphicsScene::goLeft()
-{
-    goHero(-1, 0, 10);
-}
-
-void GraphicsScene::goHero(int x, int y, int steps)
-{
-    for(int i=0;i <steps; i++)
-    {
-        if(!collideWithObjects(kolko1, QPoint(x, y)))
-        {
-
-            QPointF posPoint = kolko1->pos();
-            int xPos = posPoint.x();
-            int yPos = posPoint.y();
-            kolko1->setPos(xPos+x, yPos+y);
-            textItem->setHtml("x=" + QString::number(xPos+x) + ", y=" + QString::number(yPos+y));
-        }
-        else
-        {
-            break;
-        }
-    }
-
+    hero->processKeyEvent(event);
 }
 
 void GraphicsScene::addItem(QGraphicsItem *item)
 {
     QGraphicsScene::addItem(item);
+}
+
+QGraphicsTextItem* GraphicsScene::getTextView()
+{
+    return textItem;
 }
 
 bool GraphicsScene::collideWithObjects(PixmapItem *item, QPoint translationVector)

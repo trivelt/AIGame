@@ -18,14 +18,16 @@ SOURCES += main.cpp\
     pixmapitem.cpp \
     logger.cpp \
     graphicsview.cpp \
-    utils.cpp
+    utils.cpp \
+    hero.cpp
 
 HEADERS  += mainwindow.h \
     graphicsscene.h \
     pixmapitem.h \
     logger.h \
     graphicsview.h \
-    utils.h
+    utils.h \
+    hero.h
 
 
 RESOURCES += \
