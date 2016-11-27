@@ -27,6 +27,8 @@ public:
     void addItem(QGraphicsItem *item);
     bool collideWithObjects(PixmapItem *item, QPoint translationVector);
     void processHeroMove(QKeyEvent* event);
+    void processLaserShot(QMouseEvent* event);
+
 
 private:
     bool collideWithBorders(QRect rect);

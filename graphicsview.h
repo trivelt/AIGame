@@ -10,6 +10,7 @@ public:
 
 protected:
     void keyPressEvent(QKeyEvent* event);
+    void mousePressEvent(QMouseEvent *event);
 };
 
 #endif // GRAPHICSVIEW_H

@@ -6,6 +6,8 @@
 #include <QApplication>
 #include <QRect>
 #include <QDesktopWidget>
+#include <QMouseEvent>
+#include <QGraphicsLineItem>
 
 GraphicsScene::GraphicsScene(int x, int y, int width, int height)
     : QGraphicsScene(x , y, width, height)
@@ -57,6 +59,19 @@ void GraphicsScene::clearScene()
 void GraphicsScene::processHeroMove(QKeyEvent *event)
 {
     hero->processKeyEvent(event);
+}
+
+void GraphicsScene::processLaserShot(QMouseEvent *event)
+{
+    Logger::log("Processing laser shot at" + QString::number(event->x()));
+    QGraphicsLineItem* laserLine = new QGraphicsLineItem(hero->x()+hero->size().width()/2, hero->y()+hero->size().height()/2, event->x(), event->y());
+    QPen pen;
+    pen.setColor("#008000");
+    pen.setWidth(2);
+    laserLine->setPen(pen);
+    addItem(laserLine);
+    Utils::sleep(50);
+    removeItem(laserLine);
 }
 
 void GraphicsScene::addItem(QGraphicsItem *item)

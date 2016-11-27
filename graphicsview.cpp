@@ -15,3 +15,9 @@ void GraphicsView::keyPressEvent(QKeyEvent *event)
     GraphicsScene* gScene = (GraphicsScene*)scene();
     gScene->processHeroMove(event);
 }
+
+void GraphicsView::mousePressEvent(QMouseEvent *event)
+{
+    GraphicsScene* gScene = (GraphicsScene*)scene();
+    gScene->processLaserShot(event);
+}
