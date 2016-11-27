@@ -8,6 +8,7 @@
 
 #include "hero.h"
 #include "enemy.h"
+#include "laser.h"
 
 class PixmapItem;
 
@@ -37,6 +38,7 @@ private:
 
     Hero *hero;
     Enemy *enemy1;
+    Laser *laser;
     QGraphicsTextItem *textItem;
 };
 

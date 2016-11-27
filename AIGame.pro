@@ -20,7 +20,8 @@ SOURCES += main.cpp\
     graphicsview.cpp \
     utils.cpp \
     hero.cpp \
-    enemy.cpp
+    enemy.cpp \
+    laser.cpp
 
 HEADERS  += mainwindow.h \
     graphicsscene.h \
@@ -29,7 +30,8 @@ HEADERS  += mainwindow.h \
     graphicsview.h \
     utils.h \
     hero.h \
-    enemy.h
+    enemy.h \
+    laser.h
 
 
 RESOURCES += \
