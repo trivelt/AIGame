@@ -34,6 +34,8 @@ public slots:
     void updateScene();
 
 private:
+    void createEnemies();
+    void createCollidingObjects(int screenWidth, int screenHeight);
     bool collideWithBorders(QRect rect);
     bool collideWithObjectsInScene(PixmapItem* item, QRect rect);
     QRect getRectAfterTranslation(PixmapItem *item, QPoint translationVector);
