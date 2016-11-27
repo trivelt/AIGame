@@ -95,7 +95,7 @@ bool GraphicsScene::collideWithObjectsInScene(PixmapItem* item, QRect rect)
 
     foreach (QGraphicsItem* otherItem, items())
     {
-        if(otherItem == item)
+        if(otherItem == item || otherItem == textItem)
             continue;
         QRectF otherRect = otherItem->sceneBoundingRect();
 
