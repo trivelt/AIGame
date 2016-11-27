@@ -85,6 +85,16 @@ Hero* GraphicsScene::getHero()
     return hero;
 }
 
+QList<Enemy*> GraphicsScene::getEnemies()
+{
+    return enemies;
+}
+
+QList<QGraphicsItem*> GraphicsScene::getCollidingObjects()
+{
+    return collidingObjects;
+}
+
 void GraphicsScene::createEnemies()
 {
     Enemy *enemy1 = new Enemy(this);

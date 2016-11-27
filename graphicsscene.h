@@ -24,6 +24,8 @@ public:
 
     QGraphicsTextItem* getTextView();
     Hero* getHero();
+    QList<Enemy*> getEnemies();
+    QList<QGraphicsItem *> getCollidingObjects();
 
     void addItem(QGraphicsItem *item);
     bool collideWithObjects(PixmapItem *item, QPoint translationVector);
