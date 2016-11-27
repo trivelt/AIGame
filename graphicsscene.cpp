@@ -17,8 +17,14 @@ GraphicsScene::GraphicsScene(int x, int y, int width, int height)
     hero = new Hero(this);
     hero->setPos(0,0);
 
-    enemy1 = new Enemy(this);
+    Enemy *enemy1 = new Enemy(this);
     enemy1->setPos(0,200);
+
+    Enemy *enemy2 = new Enemy(this);
+    enemy2->setPos(600,300);
+
+    enemies.append(enemy1);
+    enemies.append(enemy2);
 
     QGraphicsRectItem* rect = new QGraphicsRectItem(screenWidth/6, screenHeight/9, 300, 80);
     rect->setBrush(Qt::green);
@@ -27,6 +33,9 @@ GraphicsScene::GraphicsScene(int x, int y, int width, int height)
     QGraphicsRectItem* rect2 = new QGraphicsRectItem(screenWidth/6, 7*screenHeight/9, 300, 80);
     rect2->setBrush(Qt::green);
     addItem(rect2);
+
+    collidingObjects.append(rect);
+    collidingObjects.append(rect2);
 
     textItem = new QGraphicsTextItem();
     textItem->setPos(screenWidth/2, screenHeight-80);
@@ -43,13 +52,25 @@ GraphicsScene::~GraphicsScene()
 {
     delete hero;
     hero = nullptr;
-    delete enemy1;
-    enemy1 = nullptr;
+
+    foreach (Enemy* enemy, enemies) {
+        enemies.removeOne(enemy);
+        delete enemy;
+    }
 }
 
 void GraphicsScene::setupScene()
 {
-    QTimer::singleShot(100, enemy1, SLOT(updateEnemy()));
+    updateScene();
+}
+
+void GraphicsScene::updateScene()
+{
+    foreach (Enemy* enemy, enemies) {
+        enemy->updateEnemy();
+    }
+
+    QTimer::singleShot(10, this, SLOT(updateScene()));
 }
 
 void GraphicsScene::clearScene()

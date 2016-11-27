@@ -10,8 +10,6 @@ Q_OBJECT
 
 public:
     Enemy(GraphicsScene* scene);
-
-public slots:
     void updateEnemy();
 
 };

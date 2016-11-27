@@ -30,6 +30,8 @@ public:
     void processHeroMove(QKeyEvent* event);
     void processLaserShot(QMouseEvent* event);
 
+public slots:
+    void updateScene();
 
 private:
     bool collideWithBorders(QRect rect);
@@ -37,7 +39,8 @@ private:
     QRect getRectAfterTranslation(PixmapItem *item, QPoint translationVector);
 
     Hero *hero;
-    Enemy *enemy1;
+    QList<Enemy*> enemies;
+    QList<QGraphicsItem*> collidingObjects;
     Laser *laser;
     QGraphicsTextItem *textItem;
 };

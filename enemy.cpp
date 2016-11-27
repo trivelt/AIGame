@@ -12,7 +12,7 @@ void Enemy::updateEnemy()
     static bool yourTurn = false;
     yourTurn = !yourTurn;
 
-    if(yourTurn)
+    if(true)
     {
         QPointF positionOfHero = scene->getHero()->pos();
         int xPosHero = positionOfHero.x();
@@ -55,7 +55,6 @@ void Enemy::updateEnemy()
                 int randY = qrand() % 4;
                 if(!scene->collideWithObjects(this, QPoint(randX, randY)))
                 {
-                    Logger::log("rands=" + QString::number(randX) +", " + QString::number(randY));
                     setPos(xPos+randX, yPos+randY);
                     break;
                 }
@@ -63,7 +62,4 @@ void Enemy::updateEnemy()
             }
         }
     }
-
-    QTimer::singleShot(10, this, SLOT(updateEnemy()));
-
 }
