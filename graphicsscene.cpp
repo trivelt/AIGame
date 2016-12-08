@@ -11,14 +11,14 @@ GraphicsScene::GraphicsScene(int x, int y, int width, int height)
     : QGraphicsScene(x , y, width, height)
 {    
     QRect screenGeometry = QApplication::desktop()->screenGeometry();
-    int screenWidth = screenGeometry.width();
-    int screenHeight = screenGeometry.height();
+    screenWidth = screenGeometry.width();
+    screenHeight = screenGeometry.height();
 
     hero = new Hero(this);
     hero->setPos(0,0);
 
     createEnemies();
-    createCollidingObjects(screenWidth, screenHeight);
+    createCollidingObjects();
 
     textItem = new QGraphicsTextItem();
     textItem->setPos(screenWidth/2, screenHeight-80);
@@ -70,6 +70,16 @@ void GraphicsScene::processLaserShot(QMouseEvent *event)
     laser->shot(event);
 }
 
+int GraphicsScene::getScreenWidth()
+{
+    return screenWidth;
+}
+
+int GraphicsScene::getScreenHeight()
+{
+    return screenHeight;
+}
+
 void GraphicsScene::addItem(QGraphicsItem *item)
 {
     QGraphicsScene::addItem(item);
@@ -107,7 +117,7 @@ void GraphicsScene::createEnemies()
     enemies.append(enemy2);
 }
 
-void GraphicsScene::createCollidingObjects(int screenWidth, int screenHeight)
+void GraphicsScene::createCollidingObjects()
 {
     QGraphicsRectItem* rect = new QGraphicsRectItem(screenWidth/6, screenHeight/9, 300, 80);
     rect->setBrush(Qt::green);

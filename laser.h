@@ -12,6 +12,10 @@ public:
     void shot(QMouseEvent* event);
 
 private:
+    void extendLineToTheBoundariesOfScene(QLineF& line);
+    void cutLineIfCollidesWithObjects(QLineF& line);
+    void drawLine(const QLineF& line);
+
     GraphicsScene* scene;
 };
 

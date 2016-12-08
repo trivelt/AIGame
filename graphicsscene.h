@@ -32,12 +32,15 @@ public:
     void processHeroMove(QKeyEvent* event);
     void processLaserShot(QMouseEvent* event);
 
+    int getScreenWidth();
+    int getScreenHeight();
+
 public slots:
     void updateScene();
 
 private:
     void createEnemies();
-    void createCollidingObjects(int screenWidth, int screenHeight);
+    void createCollidingObjects();
     bool collideWithBorders(QRect rect);
     bool collideWithObjectsInScene(PixmapItem* item, QRect rect);
     QRect getRectAfterTranslation(PixmapItem *item, QPoint translationVector);
@@ -47,6 +50,8 @@ private:
     QList<QGraphicsItem*> collidingObjects;
     Laser *laser;
     QGraphicsTextItem *textItem;
+    int screenWidth;
+    int screenHeight;
 };
 
 #endif //__GRAPHICSSCENE__H__
