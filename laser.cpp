@@ -31,16 +31,16 @@ void Laser::extendLineToTheBoundariesOfScene(QLineF &line)
     QPointF intersectionPoint;
     QLineF topBorder(QPointF(0,0), QPointF(screenWidth,0));
     if(line.intersect(topBorder, &intersectionPoint)
-            && (line.x2() > line.x1() && line.x2() < intersectionPoint.x()
-                || line.x2() < line.x1() && line.x2() > intersectionPoint.x()))
+            && ((line.x2() > line.x1() && line.x2() < intersectionPoint.x())
+                || (line.x2() < line.x1() && line.x2() > intersectionPoint.x())))
     {
         line.setP2(QPointF(intersectionPoint.x(), intersectionPoint.y()));
     }
 
     QLineF bottomBorder(QPointF(0,screenHeight), QPointF(screenWidth,screenHeight));
     if(line.intersect(bottomBorder, &intersectionPoint)
-            && (line.x2() > line.x1() && line.x2() < intersectionPoint.x()
-                || line.x2() < line.x1() && line.x2() > intersectionPoint.x()))
+            && ((line.x2() > line.x1() && line.x2() < intersectionPoint.x())
+                || (line.x2() < line.x1() && line.x2() > intersectionPoint.x())))
     {
         line.setP2(QPointF(intersectionPoint.x(), intersectionPoint.y()));
     }
