@@ -7,6 +7,11 @@ Enemy::Enemy(GraphicsScene *scene) : PixmapItem(QString("enemy"), scene)
 {
 }
 
+void Enemy::removeFromScene()
+{
+    scene->removeItem(this);
+}
+
 void Enemy::updateEnemy()
 {
     static bool yourTurn = false;

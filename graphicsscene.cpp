@@ -70,6 +70,12 @@ void GraphicsScene::processLaserShot(QMouseEvent *event)
     laser->shot(event);
 }
 
+void GraphicsScene::killEnemy(Enemy *enemy)
+{
+    enemies.removeOne(enemy);
+    enemy->removeFromScene();
+}
+
 int GraphicsScene::getScreenWidth()
 {
     return screenWidth;

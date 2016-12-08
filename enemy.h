@@ -10,6 +10,7 @@ Q_OBJECT
 
 public:
     Enemy(GraphicsScene* scene);
+    void removeFromScene();
     void updateEnemy();
 
 };

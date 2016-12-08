@@ -20,6 +20,7 @@ void Laser::shot(QMouseEvent *event)
     QLineF line(heroCenterX, heroCenterY, event->x(), event->y());
     extendLineToTheBoundariesOfScene(line);
     cutLineIfCollidesWithObjects(line);
+    detectCollisionsWithEnemies(line);
     drawLine(line);
 }
 
@@ -64,6 +65,35 @@ void Laser::cutLineIfCollidesWithObjects(QLineF &line)
             if(line.intersect(otherLine, &intersectionPoint) == QLineF::BoundedIntersection)
                 line.setP2(QPointF(intersectionPoint.x(), intersectionPoint.y()));
         }
+    }
+}
+
+void Laser::detectCollisionsWithEnemies(QLineF &line)
+{
+    QList<Enemy*> enemiesToKill;
+    foreach (Enemy* enemy, scene->getEnemies()) {
+        QRectF boundingRect = enemy->sceneBoundingRect();
+        QLineF leftLine(boundingRect.bottomLeft(), boundingRect.topLeft());
+        QLineF rightLine(boundingRect.bottomRight(), boundingRect.topRight());
+        QLineF topLine(boundingRect.topLeft(), boundingRect.topRight());
+        QLineF bottomLine(boundingRect.bottomLeft(), boundingRect.bottomRight());
+        const int numberOfLines = 4;
+        QLineF lines[numberOfLines] = {leftLine, rightLine, topLine, bottomLine};
+
+        QPointF intersectionPoint;
+        for(int i=0; i<numberOfLines; i++)
+        {
+            QLineF otherLine = lines[i];
+            if(line.intersect(otherLine, &intersectionPoint) == QLineF::BoundedIntersection)
+            {
+                enemiesToKill.append(enemy);
+           }
+        }
+    }
+
+    foreach(Enemy* enemy, enemiesToKill)
+    {
+        scene->killEnemy(enemy);
     }
 }
 

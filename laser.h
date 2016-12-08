@@ -14,6 +14,7 @@ public:
 private:
     void extendLineToTheBoundariesOfScene(QLineF& line);
     void cutLineIfCollidesWithObjects(QLineF& line);
+    void detectCollisionsWithEnemies(QLineF& line);
     void drawLine(const QLineF& line);
 
     GraphicsScene* scene;

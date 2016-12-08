@@ -31,6 +31,7 @@ public:
     bool collideWithObjects(PixmapItem *item, QPoint translationVector);
     void processHeroMove(QKeyEvent* event);
     void processLaserShot(QMouseEvent* event);
+    void killEnemy(Enemy* enemy);
 
     int getScreenWidth();
     int getScreenHeight();
