@@ -20,15 +20,15 @@ void Enemy::updateEnemy()
     if(true)
     {
         QPointF positionOfHero = scene->getHero()->pos();
-        int xPosHero = positionOfHero.x();
-        int yPosHero = positionOfHero.y();
+        double xPosHero = positionOfHero.x();
+        double yPosHero = positionOfHero.y();
 
 
         QPointF posPoint = pos();
-        int xPos = posPoint.x();
-        int yPos = posPoint.y();
-        int xMove = 0;
-        int yMove = 0;
+        double xPos = posPoint.x();
+        double yPos = posPoint.y();
+        double xMove = 0;
+        double yMove = 0;
         if(xPos > xPosHero)
         {
             xMove--;
@@ -47,7 +47,7 @@ void Enemy::updateEnemy()
             yMove++;
         }
 
-        if(!scene->collideWithObjects(this, QPoint(xMove, yMove), true))
+        if(!scene->collideWithObjects(this, QPointF(xMove, yMove), true))
         {
             setPos(xPos+xMove, yPos+yMove);
         }
@@ -58,7 +58,7 @@ void Enemy::updateEnemy()
             {
                 int randX = qrand() % 4;
                 int randY = qrand() % 4;
-                if(!scene->collideWithObjects(this, QPoint(randX, randY)))
+                if(!scene->collideWithObjects(this, QPointF(randX, randY)))
                 {
                     setPos(xPos+randX, yPos+randY);
                     break;
