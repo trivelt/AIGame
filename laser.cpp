@@ -86,7 +86,9 @@ void Laser::cutLineIfCollidesWithObjects(QLineF &line)
 void Laser::detectCollisionsWithEnemies(QLineF &line)
 {
     QList<Enemy*> enemiesToKill;
-    foreach (Enemy* enemy, scene->getEnemies()) {
+    foreach (Enemy* enemy, scene->getEnemies())
+    {
+        bool killEnemy = false;
         QRectF boundingRect = enemy->sceneBoundingRect();
         QLineF leftLine(boundingRect.bottomLeft(), boundingRect.topLeft());
         QLineF rightLine(boundingRect.bottomRight(), boundingRect.topRight());
@@ -101,9 +103,12 @@ void Laser::detectCollisionsWithEnemies(QLineF &line)
             QLineF otherLine = lines[i];
             if(line.intersect(otherLine, &intersectionPoint) == QLineF::BoundedIntersection)
             {
-                enemiesToKill.append(enemy);
+                killEnemy = true;
+                break;
            }
         }
+        if(killEnemy)
+            enemiesToKill.append(enemy);
     }
 
     foreach(Enemy* enemy, enemiesToKill)
