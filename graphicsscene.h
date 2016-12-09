@@ -53,6 +53,7 @@ private:
     Laser *laser;
     QGraphicsTextItem *textItem;
     QGraphicsTextItem *pointsFrame;
+    QGraphicsTextItem* laserInfo;
     int screenWidth;
     int screenHeight;
     bool endOfGame;

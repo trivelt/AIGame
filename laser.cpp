@@ -8,11 +8,24 @@
 Laser::Laser(GraphicsScene *scene)
 {
     this->scene = scene;
+    timeForLoad = 0;
 }
 
+void Laser::loadLaser()
+{
+    timeForLoad -= 0.01;
+}
+
+double Laser::getTimeForLoad()
+{
+    return timeForLoad;
+}
 
 void Laser::shot(QMouseEvent *event)
 {
+    if(timeForLoad > 0)
+        return;
+
     Hero* hero = scene->getHero();
     double heroCenterX = hero->x() + hero->size().width()/2;
     double heroCenterY =hero->y() + hero->size().height()/2;
@@ -22,6 +35,8 @@ void Laser::shot(QMouseEvent *event)
     cutLineIfCollidesWithObjects(line);
     detectCollisionsWithEnemies(line);
     drawLine(line);
+
+    timeForLoad = 10;
 }
 
 void Laser::extendLineToTheBoundariesOfScene(QLineF &line)

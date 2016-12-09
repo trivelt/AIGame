@@ -21,6 +21,7 @@ GraphicsScene::GraphicsScene(int x, int y, int width, int height)
 
     createEnemies();
     createCollidingObjects();
+    laser = new Laser(this);
 
     textItem = new QGraphicsTextItem();
     textItem->setPos(screenWidth/2, screenHeight-80);
@@ -31,11 +32,14 @@ GraphicsScene::GraphicsScene(int x, int y, int width, int height)
     addItem(textItem);
 
     pointsFrame = new QGraphicsTextItem();
-    pointsFrame->setPos(screenWidth-100, 20);
+    pointsFrame->setPos(screenWidth-100, 10);
     pointsFrame->setHtml("Score: 0");
     addItem(pointsFrame);
 
-    laser = new Laser(this);
+    laserInfo = new QGraphicsTextItem();
+    laserInfo->setPos(screenWidth-200, 30);
+    laserInfo->setHtml("Laser ready to shoot");
+    addItem(laserInfo);
 }
 
 GraphicsScene::~GraphicsScene()
@@ -63,11 +67,23 @@ void GraphicsScene::updateScene()
         enemy->updateEnemy();
     }
 
-    QTimer::singleShot(10, this, SLOT(updateScene()));
-
     score += 0.01;
     QString scoreText = "Score: " + QString::number(score);
     pointsFrame->setPlainText(scoreText);
+
+    if(laser->getTimeForLoad() > 0)
+    {
+        laser->loadLaser();
+        double currentLoadingState = laser->getTimeForLoad();
+        QString laserText = "Laser ready to shoot";
+
+        if(currentLoadingState > 0)
+            laserText = "Laser loading time: " + QString::number((int)currentLoadingState);
+
+        laserInfo->setPlainText(laserText);
+    }
+
+    QTimer::singleShot(10, this, SLOT(updateScene()));
 }
 
 void GraphicsScene::clearScene()
