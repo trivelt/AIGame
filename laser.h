@@ -10,7 +10,7 @@ class Laser
 public:
     Laser(GraphicsScene* scene);
     void loadLaser();
-    double getTimeForLoad();
+    double getLoadingProgress();
     void shot(QMouseEvent* event);
 
 private:
@@ -20,7 +20,7 @@ private:
     void drawLine(const QLineF& line);
 
     GraphicsScene* scene;
-    double timeForLoad;
+    double loadingProgress;
 };
 
 #endif // LASER_H

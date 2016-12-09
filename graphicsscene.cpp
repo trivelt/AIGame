@@ -71,14 +71,14 @@ void GraphicsScene::updateScene()
     QString scoreText = "Score: " + QString::number(score);
     pointsFrame->setPlainText(scoreText);
 
-    if(laser->getTimeForLoad() > 0)
+    if(laser->getLoadingProgress() < 100)
     {
         laser->loadLaser();
-        double currentLoadingState = laser->getTimeForLoad();
+        double currentLoadingState = laser->getLoadingProgress();
         QString laserText = "Laser ready to shoot";
 
-        if(currentLoadingState > 0)
-            laserText = "Laser loading time: " + QString::number((int)currentLoadingState);
+        if(currentLoadingState < 100)
+            laserText = "Laser loading progress: " + QString::number((int)currentLoadingState) + "%";
 
         laserInfo->setPlainText(laserText);
     }
