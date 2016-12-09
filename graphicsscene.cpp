@@ -186,22 +186,21 @@ void GraphicsScene::createCollidingObjects()
     collidingObjects.append(rect2);
 }
 
-bool GraphicsScene::collideWithObjects(PixmapItem *item, QPoint translationVector, bool enemy)
+bool GraphicsScene::collideWithObjects(PixmapItem *item, QPointF translationVector, bool enemy)
 {
-    QRect newRect = getRectAfterTranslation(item, translationVector);
+    QRectF newRect = getRectAfterTranslation(item, translationVector);
     return collideWithBorders(newRect) || collideWithObjectsInScene(item, newRect, enemy);
 }
 
-bool GraphicsScene::collideWithBorders(QRect rect)
+bool GraphicsScene::collideWithBorders(QRectF rect)
 {
-    QRect screenGeometry = QApplication::desktop()->screenGeometry();
     return (rect.left() < 0
-            || rect.right() > screenGeometry.width()
+            || rect.right() > screenWidth
             || rect.top() < 0
-            || rect.bottom() > screenGeometry.height());
+            || rect.bottom() > screenHeight);
 }
 
-bool GraphicsScene::collideWithObjectsInScene(PixmapItem* item, QRect rect, bool enemy)
+bool GraphicsScene::collideWithObjectsInScene(PixmapItem* item, QRectF rect, bool enemy)
 {
     bool collide = false;
 
@@ -228,17 +227,17 @@ bool GraphicsScene::collideWithObjectsInScene(PixmapItem* item, QRect rect, bool
     return false;
 }
 
-QRect GraphicsScene::getRectAfterTranslation(PixmapItem *item, QPoint translationVector)
+QRectF GraphicsScene::getRectAfterTranslation(PixmapItem *item, QPointF translationVector)
 {
     QSizeF itemSize = item->size();
     QPointF itemPos = item->pos();
-    int translationX = translationVector.x();
-    int translationY = translationVector.y();
+    double translationX = translationVector.x();
+    double translationY = translationVector.y();
 
-    int itemLeft = itemPos.x() + translationX;
-    int itemTop = itemPos.y() + translationY;
+    double itemLeft = itemPos.x() + translationX;
+    double itemTop = itemPos.y() + translationY;
 
-    QRect newRect;
+    QRectF newRect;
     newRect.setLeft(itemLeft);
     newRect.setTop(itemTop);
     newRect.setRight(itemLeft+itemSize.width());

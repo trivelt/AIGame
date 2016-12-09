@@ -29,7 +29,7 @@ public:
     QList<QGraphicsItem *> getCollidingObjects();
 
     void addItem(QGraphicsItem *item);
-    bool collideWithObjects(PixmapItem *item, QPoint translationVector, bool enemy=false);
+    bool collideWithObjects(PixmapItem *item, QPointF translationVector, bool enemy=false);
     void processHeroMove(QKeyEvent* event);
     void processLaserShot(QMouseEvent* event);
     void killEnemy(Enemy* enemy);
@@ -43,9 +43,9 @@ public slots:
 private:
     void createEnemies();
     void createCollidingObjects();
-    bool collideWithBorders(QRect rect);
-    bool collideWithObjectsInScene(PixmapItem* item, QRect rect, bool enemy=false);
-    QRect getRectAfterTranslation(PixmapItem *item, QPoint translationVector);
+    bool collideWithBorders(QRectF rect);
+    bool collideWithObjectsInScene(PixmapItem* item, QRectF rect, bool enemy=false);
+    QRectF getRectAfterTranslation(PixmapItem *item, QPointF translationVector);
 
     Hero *hero;
     QList<Enemy*> enemies;
