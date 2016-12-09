@@ -21,6 +21,7 @@ public:
     ~GraphicsScene();
     void setupScene();
     void clearScene();
+    void showEndScreen();
 
     QGraphicsTextItem* getTextView();
     Hero* getHero();
@@ -28,7 +29,7 @@ public:
     QList<QGraphicsItem *> getCollidingObjects();
 
     void addItem(QGraphicsItem *item);
-    bool collideWithObjects(PixmapItem *item, QPoint translationVector);
+    bool collideWithObjects(PixmapItem *item, QPoint translationVector, bool enemy=false);
     void processHeroMove(QKeyEvent* event);
     void processLaserShot(QMouseEvent* event);
     void killEnemy(Enemy* enemy);
@@ -43,7 +44,7 @@ private:
     void createEnemies();
     void createCollidingObjects();
     bool collideWithBorders(QRect rect);
-    bool collideWithObjectsInScene(PixmapItem* item, QRect rect);
+    bool collideWithObjectsInScene(PixmapItem* item, QRect rect, bool enemy=false);
     QRect getRectAfterTranslation(PixmapItem *item, QPoint translationVector);
 
     Hero *hero;
@@ -51,8 +52,11 @@ private:
     QList<QGraphicsItem*> collidingObjects;
     Laser *laser;
     QGraphicsTextItem *textItem;
+    QGraphicsTextItem *pointsFrame;
     int screenWidth;
     int screenHeight;
+    bool endOfGame;
+    double score;
 };
 
 #endif //__GRAPHICSSCENE__H__

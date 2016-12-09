@@ -10,6 +10,8 @@
 GraphicsScene::GraphicsScene(int x, int y, int width, int height)
     : QGraphicsScene(x , y, width, height)
 {    
+    endOfGame = false;
+    score = 0;
     QRect screenGeometry = QApplication::desktop()->screenGeometry();
     screenWidth = screenGeometry.width();
     screenHeight = screenGeometry.height();
@@ -27,6 +29,11 @@ GraphicsScene::GraphicsScene(int x, int y, int width, int height)
     font.setPointSize(20);
     textItem->setFont(font);
     addItem(textItem);
+
+    pointsFrame = new QGraphicsTextItem();
+    pointsFrame->setPos(screenWidth-100, 20);
+    pointsFrame->setHtml("Score: 0");
+    addItem(pointsFrame);
 
     laser = new Laser(this);
 }
@@ -49,25 +56,51 @@ void GraphicsScene::setupScene()
 
 void GraphicsScene::updateScene()
 {
+    if(endOfGame)
+        return;
+
     foreach (Enemy* enemy, enemies) {
         enemy->updateEnemy();
     }
 
     QTimer::singleShot(10, this, SLOT(updateScene()));
+
+    score += 0.01;
+    QString scoreText = "Score: " + QString::number(score);
+    pointsFrame->setPlainText(scoreText);
 }
 
 void GraphicsScene::clearScene()
 {
 }
 
+void GraphicsScene::showEndScreen()
+{
+    removeItem(pointsFrame);
+
+    QGraphicsRectItem* backgroundRect = new QGraphicsRectItem(screenWidth/10, screenHeight/10, screenWidth*0.8, screenHeight*0.8);
+    backgroundRect->setBrush(Qt::gray);
+    addItem(backgroundRect);
+
+    QGraphicsTextItem* endText = new QGraphicsTextItem();
+    endText->setPos(screenWidth*0.35, screenHeight*0.3);
+    QFont font;
+    font.setPointSize(20);
+    endText->setFont(font);
+    endText->setHtml("<h1>GAME OVER</h1><br /> <br />&nbsp;&nbsp;&nbsp;Your score: " + QString::number(score) + " points");
+    addItem(endText);
+}
+
 void GraphicsScene::processHeroMove(QKeyEvent *event)
 {
-    hero->processKeyEvent(event);
+    if(!endOfGame)
+        hero->processKeyEvent(event);
 }
 
 void GraphicsScene::processLaserShot(QMouseEvent *event)
 {
-    laser->shot(event);
+    if(!endOfGame)
+        laser->shot(event);
 }
 
 void GraphicsScene::killEnemy(Enemy *enemy)
@@ -137,10 +170,10 @@ void GraphicsScene::createCollidingObjects()
     collidingObjects.append(rect2);
 }
 
-bool GraphicsScene::collideWithObjects(PixmapItem *item, QPoint translationVector)
+bool GraphicsScene::collideWithObjects(PixmapItem *item, QPoint translationVector, bool enemy)
 {
     QRect newRect = getRectAfterTranslation(item, translationVector);
-    return collideWithBorders(newRect) || collideWithObjectsInScene(item, newRect);
+    return collideWithBorders(newRect) || collideWithObjectsInScene(item, newRect, enemy);
 }
 
 bool GraphicsScene::collideWithBorders(QRect rect)
@@ -152,13 +185,13 @@ bool GraphicsScene::collideWithBorders(QRect rect)
             || rect.bottom() > screenGeometry.height());
 }
 
-bool GraphicsScene::collideWithObjectsInScene(PixmapItem* item, QRect rect)
+bool GraphicsScene::collideWithObjectsInScene(PixmapItem* item, QRect rect, bool enemy)
 {
     bool collide = false;
 
     foreach (QGraphicsItem* otherItem, items())
     {
-        if(otherItem == item || otherItem == textItem)
+        if(otherItem == item || otherItem == textItem || otherItem == pointsFrame)
             continue;
         QRectF otherRect = otherItem->sceneBoundingRect();
 
@@ -167,7 +200,14 @@ bool GraphicsScene::collideWithObjectsInScene(PixmapItem* item, QRect rect)
                     || otherRect.top() > rect.bottom()
                     || otherRect.bottom() < rect.top());
         if(collide)
+        {
+            if(otherItem == hero && enemy)
+            {
+                endOfGame = true;
+                showEndScreen();
+            }
             return true;
+        }
     }
     return false;
 }

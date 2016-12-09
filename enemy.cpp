@@ -47,7 +47,7 @@ void Enemy::updateEnemy()
             yMove++;
         }
 
-        if(!scene->collideWithObjects(this, QPoint(xMove, yMove)))
+        if(!scene->collideWithObjects(this, QPoint(xMove, yMove), true))
         {
             setPos(xPos+xMove, yPos+yMove);
         }
