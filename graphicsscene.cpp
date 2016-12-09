@@ -206,7 +206,8 @@ bool GraphicsScene::collideWithObjectsInScene(PixmapItem* item, QRectF rect, boo
 
     foreach (QGraphicsItem* otherItem, items())
     {
-        if(otherItem == item || otherItem == textItem || otherItem == pointsFrame)
+        if(otherItem == item || otherItem == textItem
+                || otherItem == pointsFrame || otherItem == laserInfo)
             continue;
         QRectF otherRect = otherItem->sceneBoundingRect();
 
