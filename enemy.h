@@ -13,7 +13,7 @@ Q_OBJECT
 public:
     Enemy(GraphicsScene* scene);
     void removeFromScene();
-    void updateEnemy();
+    void updateEnemy(double timeElapsed);
 
 private:
     SteeringBehaviors* steering;

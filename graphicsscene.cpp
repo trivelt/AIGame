@@ -48,7 +48,7 @@ void GraphicsScene::updateScene()
         return;
 
     foreach (Enemy* enemy, enemies) {
-        enemy->updateEnemy();
+        enemy->updateEnemy(10);
     }
 
     updateTextItems();
