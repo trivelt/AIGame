@@ -22,24 +22,8 @@ GraphicsScene::GraphicsScene(int x, int y, int width, int height)
     createEnemies();
     createCollidingObjects();
     laser = new Laser(this);
+    createTextItems();
 
-    textItem = new QGraphicsTextItem();
-    textItem->setPos(screenWidth/2, screenHeight-80);
-    textItem->setHtml("TEST 123");
-    QFont font;
-    font.setPointSize(20);
-    textItem->setFont(font);
-    addItem(textItem);
-
-    pointsFrame = new QGraphicsTextItem();
-    pointsFrame->setPos(screenWidth-100, 10);
-    pointsFrame->setHtml("Score: 0");
-    addItem(pointsFrame);
-
-    laserInfo = new QGraphicsTextItem();
-    laserInfo->setPos(screenWidth-200, 30);
-    laserInfo->setHtml("Laser ready to shoot");
-    addItem(laserInfo);
 }
 
 GraphicsScene::~GraphicsScene()
@@ -67,6 +51,12 @@ void GraphicsScene::updateScene()
         enemy->updateEnemy();
     }
 
+    updateTextItems();
+    QTimer::singleShot(10, this, SLOT(updateScene()));
+}
+
+void GraphicsScene::updateTextItems()
+{
     score += 0.01;
     QString scoreText = "Score: " + QString::number(score);
     pointsFrame->setPlainText(scoreText);
@@ -82,8 +72,6 @@ void GraphicsScene::updateScene()
 
         laserInfo->setPlainText(laserText);
     }
-
-    QTimer::singleShot(10, this, SLOT(updateScene()));
 }
 
 void GraphicsScene::clearScene()
@@ -159,6 +147,27 @@ QList<QGraphicsItem*> GraphicsScene::getCollidingObjects()
 {
     return collidingObjects;
 }
+
+ void GraphicsScene::createTextItems()
+ {
+     textItem = new QGraphicsTextItem();
+     textItem->setPos(screenWidth/2, screenHeight-80);
+     textItem->setHtml("TEST 123");
+     QFont font;
+     font.setPointSize(20);
+     textItem->setFont(font);
+     addItem(textItem);
+
+     pointsFrame = new QGraphicsTextItem();
+     pointsFrame->setPos(screenWidth-100, 10);
+     pointsFrame->setHtml("Score: 0");
+     addItem(pointsFrame);
+
+     laserInfo = new QGraphicsTextItem();
+     laserInfo->setPos(screenWidth-200, 30);
+     laserInfo->setHtml("Laser ready to shoot");
+     addItem(laserInfo);
+ }
 
 void GraphicsScene::createEnemies()
 {

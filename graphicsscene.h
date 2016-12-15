@@ -41,8 +41,10 @@ public slots:
     void updateScene();
 
 private:
+    void createTextItems();
     void createEnemies();
     void createCollidingObjects();
+    void updateTextItems();
     bool collideWithBorders(QRectF rect);
     bool collideWithObjectsInScene(PixmapItem* item, QRectF rect, bool enemy=false);
     QRectF getRectAfterTranslation(PixmapItem *item, QPointF translationVector);
