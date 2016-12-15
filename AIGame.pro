@@ -21,7 +21,8 @@ SOURCES += main.cpp\
     utils.cpp \
     hero.cpp \
     enemy.cpp \
-    laser.cpp
+    laser.cpp \
+    steeringbehaviors.cpp
 
 HEADERS  += mainwindow.h \
     graphicsscene.h \
@@ -31,7 +32,8 @@ HEADERS  += mainwindow.h \
     utils.h \
     hero.h \
     enemy.h \
-    laser.h
+    laser.h \
+    steeringbehaviors.h
 
 
 RESOURCES += \
