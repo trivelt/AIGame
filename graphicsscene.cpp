@@ -103,8 +103,22 @@ void GraphicsScene::processHeroMove(QKeyEvent *event)
 
 void GraphicsScene::processLaserShot(QMouseEvent *event)
 {
-    if(!endOfGame)
-        laser->shot(event);
+    if(endOfGame)
+        return;
+
+    int numberOfEnemies = enemies.size();
+    laser->shot(event);
+    int killedEnemies = numberOfEnemies - enemies.size();
+    score += 100*killedEnemies;
+
+    if(enemies.size() == 0)
+    {
+        Logger::log("Score=" + QString::number(score));
+        score += (0.9/score*500000);
+        Logger::log("Score=" + QString::number(score));
+        endOfGame = true;
+        showEndScreen();
+    }
 }
 
 void GraphicsScene::killEnemy(Enemy *enemy)
