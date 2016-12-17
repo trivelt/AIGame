@@ -1,10 +1,17 @@
 #include "enemy.h"
 #include "graphicsscene.h"
+#include "steeringbehaviors.h"
+#include "vectorhelper.h"
 #include "logger.h"
 #include <QTimer>
 
-Enemy::Enemy(GraphicsScene *scene) : PixmapItem(QString("enemy"), scene)
+Enemy::Enemy(GraphicsScene *scene) :
+    PixmapItem(QString("enemy"), scene),
+    maxForce(10),
+    maxSpeed(50),
+    maxTurnRate(100)
 {
+    steering = new SteeringBehaviors();
 }
 
 void Enemy::removeFromScene()
@@ -61,5 +68,24 @@ void Enemy::updateEnemy(double timeElapsed)
             }
             trials--;
         }
+    }
+}
+
+void Enemy::updateAI(double timeElapsed)
+{
+    QVector2D steeringForce = steering->calculate();
+    QVector2D acceleration = steeringForce / mass;
+
+    // update velocity
+    velocity += acceleration*timeElapsed;
+    VectorHelper::truncateVector(velocity, maxSpeed);
+
+    // update position
+    position += velocity*timeElapsed;
+
+    if (velocity.lengthSquared() > VectorHelper::epsilon)
+    {
+        heading = VectorHelper::normalize(velocity);
+        side = VectorHelper::perpendicular(heading);
     }
 }
