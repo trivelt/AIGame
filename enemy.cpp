@@ -11,7 +11,7 @@ Enemy::Enemy(GraphicsScene *scene) :
     maxSpeed(50),
     maxTurnRate(100)
 {
-    steering = new SteeringBehaviors();
+    steering = new SteeringBehaviors(this);
 }
 
 void Enemy::removeFromScene()

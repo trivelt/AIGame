@@ -6,11 +6,18 @@
 
 class Enemy;
 
+enum Deceleration
+{
+    SLOW = 3,
+    NORMAL = 2,
+    FAST = 1
+};
+
 class SteeringBehaviors : public QObject
 {
     Q_OBJECT
 public:
-    explicit SteeringBehaviors(QObject *parent = 0);
+    explicit SteeringBehaviors(Enemy* owner, QObject *parent = 0);
 
     QVector2D calculate();
     QVector2D forwardComponent();
@@ -33,9 +40,11 @@ signals:
 public slots:
 
 private:
-    QVector2D seek(QVector2D&);
-    QVector2D flee(QVector2D&);
-    QVector2D arrive(QVector2D&);
+    QVector2D seek(QVector2D targetPosition);
+    QVector2D flee(QVector2D targetPosition);
+    QVector2D arrive(QVector2D targetPosition, Deceleration deceleration);
+
+    Enemy* owner;
 };
 
 #endif // STEERINGBEHAVIORS_H

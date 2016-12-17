@@ -16,6 +16,14 @@ public:
     void updateEnemy(double timeElapsed);
     void updateAI(double timeElapsed);
 
+    inline QVector2D getVelocity() const {return velocity;}
+    inline QVector2D getPosition() const {return position;}
+    inline QVector2D getHeading() const {return heading;}
+    inline QVector2D getSide() const {return side;}
+    inline double getMaxForce() const {return maxForce;}
+    inline double getMaxSpeed() const {return maxSpeed;}
+    inline double getMaxTurnRate() const {return maxTurnRate;}
+
 private:
     SteeringBehaviors* steering;
     QVector2D velocity;

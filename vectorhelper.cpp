@@ -24,3 +24,11 @@ QVector2D VectorHelper::perpendicular(const QVector2D &other)
 {
     return QVector2D(-other.y(), other.x());
 }
+
+double VectorHelper::distanceSq(const QVector2D &first, const QVector2D &second)
+{
+    double xSeparation = second.x() - first.x();
+    double ySeparation = second.y() - first.y();
+
+    return ySeparation*ySeparation + xSeparation*xSeparation;
+}
