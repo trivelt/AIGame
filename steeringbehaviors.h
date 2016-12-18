@@ -43,8 +43,17 @@ private:
     QVector2D seek(QVector2D targetPosition);
     QVector2D flee(QVector2D targetPosition);
     QVector2D arrive(QVector2D targetPosition, Deceleration deceleration);
+    QVector2D pursuit(const Enemy* evader);
+    QVector2D evade(const Enemy* pursuer);
+    QVector2D wander();
 
     Enemy* owner;
+
+    double wanderRadius;
+    double wanderDistance;
+    double wanderJitter;
+    QVector2D wanderTarget;
+
 };
 
 #endif // STEERINGBEHAVIORS_H
