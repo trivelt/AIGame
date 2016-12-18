@@ -3,6 +3,7 @@
 #include "steeringbehaviors.h"
 #include "vectorhelper.h"
 #include "logger.h"
+#include "utils.h"
 #include <QTimer>
 
 Enemy::Enemy(GraphicsScene *scene) :
@@ -12,6 +13,24 @@ Enemy::Enemy(GraphicsScene *scene) :
     maxTurnRate(100)
 {
     steering = new SteeringBehaviors(this);
+}
+
+Enemy *Enemy::createRandomEnemy(GraphicsScene *scene, double screenWidth, double screenHeight)
+{
+    Enemy* enemy = new Enemy(scene);
+
+    double randX = Utils::randomInRange(0, screenWidth);
+    double randY = Utils::randomInRange(0, screenHeight);
+    enemy->setPos(randX, randY);
+
+    while(scene->collideWithObjects(enemy, QPointF(0,0)))
+    {
+        randX = Utils::randomInRange(0, screenWidth);
+        randY = Utils::randomInRange(0, screenHeight);
+        enemy->setPos(randX, randY);
+    }
+
+    return enemy;
 }
 
 void Enemy::removeFromScene()
@@ -88,4 +107,9 @@ void Enemy::updateAI(double timeElapsed)
         heading = VectorHelper::normalize(velocity);
         side = VectorHelper::perpendicular(heading);
     }
+}
+
+double Enemy::getSpeed() const
+{
+    return velocity.length();
 }

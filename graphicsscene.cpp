@@ -10,6 +10,7 @@
 GraphicsScene::GraphicsScene(int x, int y, int width, int height)
     : QGraphicsScene(x , y, width, height)
 {    
+    Utils::initRandoms();
     endOfGame = false;
     score = 0;
     QRect screenGeometry = QApplication::desktop()->screenGeometry();
@@ -19,7 +20,7 @@ GraphicsScene::GraphicsScene(int x, int y, int width, int height)
     hero = new Hero(this);
     hero->setPos(0,0);
 
-    createEnemies();
+    createEnemies(5);
     createCollidingObjects();
     laser = new Laser(this);
     createTextItems();
@@ -84,6 +85,7 @@ void GraphicsScene::showEndScreen()
 
     QGraphicsRectItem* backgroundRect = new QGraphicsRectItem(screenWidth/10, screenHeight/10, screenWidth*0.8, screenHeight*0.8);
     backgroundRect->setBrush(Qt::gray);
+    backgroundRect->setZValue(100);
     addItem(backgroundRect);
 
     QGraphicsTextItem* endText = new QGraphicsTextItem();
@@ -92,6 +94,7 @@ void GraphicsScene::showEndScreen()
     font.setPointSize(20);
     endText->setFont(font);
     endText->setHtml("<h1>GAME OVER</h1><br /> <br />&nbsp;&nbsp;&nbsp;Your score: " + QString::number(score) + " points");
+    endText->setZValue(150);
     addItem(endText);
 }
 
@@ -113,9 +116,7 @@ void GraphicsScene::processLaserShot(QMouseEvent *event)
 
     if(enemies.size() == 0)
     {
-        Logger::log("Score=" + QString::number(score));
         score += (0.9/score*500000);
-        Logger::log("Score=" + QString::number(score));
         endOfGame = true;
         showEndScreen();
     }
@@ -183,16 +184,13 @@ QList<QGraphicsItem*> GraphicsScene::getCollidingObjects()
      addItem(laserInfo);
  }
 
-void GraphicsScene::createEnemies()
+void GraphicsScene::createEnemies(int numberOfEnemies)
 {
-    Enemy *enemy1 = new Enemy(this);
-    enemy1->setPos(0,200);
-
-    Enemy *enemy2 = new Enemy(this);
-    enemy2->setPos(600,300);
-
-    enemies.append(enemy1);
-    enemies.append(enemy2);
+    for(int i=0; i<numberOfEnemies; i++)
+    {
+        Enemy* enemy = Enemy::createRandomEnemy(this, screenWidth, screenHeight);
+        enemies.append(enemy);
+    }
 }
 
 void GraphicsScene::createCollidingObjects()

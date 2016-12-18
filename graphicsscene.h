@@ -42,7 +42,7 @@ public slots:
 
 private:
     void createTextItems();
-    void createEnemies();
+    void createEnemies(int numberOfEnemies);
     void createCollidingObjects();
     void updateTextItems();
     bool collideWithBorders(QRectF rect);

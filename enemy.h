@@ -12,9 +12,12 @@ Q_OBJECT
 
 public:
     Enemy(GraphicsScene* scene);
+    static Enemy* createRandomEnemy(GraphicsScene* scene, double screenWidth, double screenHeight);
     void removeFromScene();
     void updateEnemy(double timeElapsed);
     void updateAI(double timeElapsed);
+
+    double getSpeed() const;
 
     inline QVector2D getVelocity() const {return velocity;}
     inline QVector2D getPosition() const {return position;}
