@@ -11,6 +11,8 @@ PixmapItem::PixmapItem(const QString &fileName, GraphicsScene *scene) : QGraphic
     this->scene = scene;
 
     pix  = QPixmap(QStringLiteral(":/") + fileName);
+    pix = pix.scaled(32, 32, Qt::IgnoreAspectRatio, Qt::FastTransformation);
+
     Logger::log("Creating new PixMapItem from file '" + fileName + "', size=" +
             QString::number(pix.width()) + "x" + QString::number(pix.height()));
 }
