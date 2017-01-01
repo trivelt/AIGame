@@ -30,6 +30,7 @@ public:
 
     void addItem(QGraphicsItem *item);
     bool collideWithObjects(PixmapItem *item, QPointF translationVector, bool enemy=false);
+    bool collideWithObjects(Vehicle *item, QPointF translationVector, bool enemy=false);
     void processHeroMove(QKeyEvent* event);
     void processLaserShot(QMouseEvent* event);
     void killEnemy(Enemy* enemy);
@@ -48,6 +49,7 @@ private:
     bool collideWithBorders(QRectF rect);
     bool collideWithObjectsInScene(PixmapItem* item, QRectF rect, bool enemy=false);
     QRectF getRectAfterTranslation(PixmapItem *item, QPointF translationVector);
+    CircleItem getCircleAfterTranslation(Vehicle* item, QPointF translationVector);
 
     Hero *hero;
     QList<Enemy*> enemies;

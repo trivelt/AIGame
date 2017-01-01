@@ -2,8 +2,9 @@
 #include "graphicsscene.h"
 #include <QKeyEvent>
 
-Hero::Hero(GraphicsScene* scene) : PixmapItem(QString("hero"), scene)
+Hero::Hero(GraphicsScene* scene) : Vehicle(0, 0, 32, scene)
 {
+    setColor(Qt::green);
 }
 
 void Hero::processKeyEvent(QKeyEvent *event)
@@ -50,6 +51,11 @@ void Hero::goLeft()
 
 void Hero::go(int x, int y, int steps)
 {
+
+//    QPointF posPoint = pos();
+//    int xPos = posPoint.x();
+//    int yPos = posPoint.y();
+//    setPos(xPos+x, yPos+y);
     for(int i=0;i <steps; i++)
     {
         if(!scene->collideWithObjects(this, QPoint(x, y)))

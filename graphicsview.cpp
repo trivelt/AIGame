@@ -6,7 +6,7 @@
 GraphicsView::GraphicsView(QGraphicsScene *scene, QWidget *parent) :
     QGraphicsView(scene, parent)
 {
-
+    setRenderHints(QPainter::Antialiasing | QPainter::SmoothPixmapTransform);
 }
 
 void GraphicsView::keyPressEvent(QKeyEvent *event)

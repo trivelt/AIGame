@@ -1,11 +1,13 @@
 #include "graphicsscene.h"
 #include "logger.h"
 #include "utils.h"
+#include "vehicle.h"
 
 #include <QTimer>
 #include <QApplication>
 #include <QRect>
 #include <QDesktopWidget>
+#include <QDebug>
 
 GraphicsScene::GraphicsScene(int x, int y, int width, int height)
     : QGraphicsScene(x , y, width, height)
@@ -18,9 +20,9 @@ GraphicsScene::GraphicsScene(int x, int y, int width, int height)
     screenHeight = screenGeometry.height();
 
     hero = new Hero(this);
-    hero->setPos(0,0);
+    hero->setPos(50,0);
 
-    createEnemies(5);
+//    createEnemies(3);
     createCollidingObjects();
     laser = new Laser(this);
     createTextItems();
@@ -195,22 +197,36 @@ void GraphicsScene::createEnemies(int numberOfEnemies)
 
 void GraphicsScene::createCollidingObjects()
 {
-    QGraphicsRectItem* rect = new QGraphicsRectItem(screenWidth/6, screenHeight/9, 300, 80);
-    rect->setBrush(Qt::green);
-    addItem(rect);
+//    QGraphicsRectItem* rect = new QGraphicsRectItem(screenWidth/6, screenHeight/9, 300, 80);
+//    rect->setBrush(Qt::green);
+//    addItem(rect);
 
-    QGraphicsRectItem* rect2 = new QGraphicsRectItem(screenWidth/6, 7*screenHeight/9, 300, 80);
-    rect2->setBrush(Qt::green);
-    addItem(rect2);
+//    QGraphicsRectItem* rect2 = new QGraphicsRectItem(screenWidth/6, 7*screenHeight/9, 300, 80);
+//    rect2->setBrush(Qt::green);
+//    addItem(rect2);
 
-    collidingObjects.append(rect);
-    collidingObjects.append(rect2);
+//    collidingObjects.append(rect);
+//    collidingObjects.append(rect2);
+
+//    QGraphicsEllipseItem* ellipse = new QGraphicsEllipseItem(screenWidth/6, screenHeight/9, 100, 100);
+//    ellipse->setBrush(Qt::green);
+    Vehicle* ellipse = new Vehicle(screenWidth/6, screenHeight/9, 100, this);
+    collidingObjects.append(ellipse);
+
+
+
 }
 
 bool GraphicsScene::collideWithObjects(PixmapItem *item, QPointF translationVector, bool enemy)
 {
     QRectF newRect = getRectAfterTranslation(item, translationVector);
     return collideWithBorders(newRect) || collideWithObjectsInScene(item, newRect, enemy);
+}
+
+bool GraphicsScene::collideWithObjects(Vehicle *item, QPointF translationVector, bool enemy)
+{
+    qDebug() << "Position of item=" << item->pos();
+    return false;
 }
 
 bool GraphicsScene::collideWithBorders(QRectF rect)
@@ -266,4 +282,11 @@ QRectF GraphicsScene::getRectAfterTranslation(PixmapItem *item, QPointF translat
     newRect.setBottom(itemTop+itemSize.height());
 
     return newRect;
+}
+
+CircleItem GraphicsScene::getCircleAfterTranslation(Vehicle *item, QPointF translationVector)
+{
+    QPointF itemPos = item->pos();
+    double translationX = translationVector.x();
+    double translationY = translationVector.y();
 }

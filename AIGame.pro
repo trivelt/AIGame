@@ -23,7 +23,10 @@ SOURCES += main.cpp\
     enemy.cpp \
     laser.cpp \
     steeringbehaviors.cpp \
-    vectorhelper.cpp
+    vectorhelper.cpp \
+    obstacle.cpp \
+    vehicle.cpp \
+    circleitem.cpp
 
 HEADERS  += mainwindow.h \
     graphicsscene.h \
@@ -35,7 +38,10 @@ HEADERS  += mainwindow.h \
     enemy.h \
     laser.h \
     steeringbehaviors.h \
-    vectorhelper.h
+    vectorhelper.h \
+    obstacle.h \
+    vehicle.h \
+    circleitem.h
 
 
 RESOURCES += \

@@ -23,18 +23,18 @@ double Laser::getLoadingProgress()
 
 void Laser::shot(QMouseEvent *event)
 {
-    if(loadingProgress < 100)
-        return;
+//    if(loadingProgress < 100)
+//        return;
 
-    Hero* hero = scene->getHero();
-    double heroCenterX = hero->x() + hero->size().width()/2;
-    double heroCenterY =hero->y() + hero->size().height()/2;
+//    Hero* hero = scene->getHero();
+//    double heroCenterX = hero->x() + hero->size().width()/2;
+//    double heroCenterY =hero->y() + hero->size().height()/2;
 
-    QLineF line(heroCenterX, heroCenterY, event->x(), event->y());
-    extendLineToTheBoundariesOfScene(line);
-    cutLineIfCollidesWithObjects(line);
-    detectCollisionsWithEnemies(line);
-    drawLine(line);
+//    QLineF line(heroCenterX, heroCenterY, event->x(), event->y());
+//    extendLineToTheBoundariesOfScene(line);
+//    cutLineIfCollidesWithObjects(line);
+//    detectCollisionsWithEnemies(line);
+//    drawLine(line);
 
     loadingProgress = 0;
 }

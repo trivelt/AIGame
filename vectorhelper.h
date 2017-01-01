@@ -11,7 +11,7 @@ public:
     static QVector2D perpendicular(const QVector2D& other);
     static double distanceSq(const QVector2D& first, const QVector2D& second);
 
-    static const double epsilon = 0.00000001;
+    static constexpr double epsilon = 0.00000001;
 
 };
 

@@ -1,10 +1,10 @@
 #ifndef HERO_H
 #define HERO_H
-#include "pixmapitem.h"
+#include "vehicle.h"
 
 class GraphicsScene;
 
-class Hero : public PixmapItem
+class Hero : public Vehicle
 {
 public:
     Hero(GraphicsScene* scene);
