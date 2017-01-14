@@ -2,7 +2,7 @@
 #include "graphicsscene.h"
 #include <QKeyEvent>
 
-Hero::Hero(GraphicsScene* scene) : Vehicle(0, 0, 32, scene)
+Hero::Hero(GraphicsScene* scene) : Vehicle(0, 0, 16, scene)
 {
     setColor(Qt::green);
 }

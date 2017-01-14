@@ -3,14 +3,25 @@
 
 #include <QGraphicsEllipseItem>
 
-class CircleItem : public QGraphicsEllipseItem
+class CircleItem
 {
+
 public:
-    CircleItem(double x, double y, double radius);
-    double getRadius() const;
+    CircleItem(double x, double y, double radiusVal);
+    virtual ~CircleItem();
+    double radius() const;
+    double x();
+    double y();
+    void setPos(double x, double y);
+    QPointF pos();
+    QGraphicsEllipseItem* getGraphicsItem();
 
 private:
-    double radius;
+    double xVal;
+    double yVal;
+    double radiusVal;
+
+    QGraphicsEllipseItem* ellipse;
 };
 
 #endif // CIRCLEITEM_H

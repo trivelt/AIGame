@@ -7,7 +7,7 @@
 #include <QTimer>
 
 Enemy::Enemy(GraphicsScene *scene) :
-    PixmapItem(QString("enemy"), scene),
+    Vehicle(0, 0, 50, scene),
     maxForce(10),
     maxSpeed(50),
     maxTurnRate(100)
@@ -35,7 +35,7 @@ Enemy *Enemy::createRandomEnemy(GraphicsScene *scene, double screenWidth, double
 
 void Enemy::removeFromScene()
 {
-    scene->removeItem(this);
+    scene->removeItem(getGraphicsItem());
 }
 
 void Enemy::updateEnemy(double timeElapsed)
@@ -109,7 +109,3 @@ void Enemy::updateAI(double timeElapsed)
     }
 }
 
-double Enemy::getSpeed() const
-{
-    return velocity.length();
-}

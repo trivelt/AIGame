@@ -26,10 +26,9 @@ public:
     QGraphicsTextItem* getTextView();
     Hero* getHero();
     QList<Enemy*> getEnemies();
-    QList<QGraphicsItem *> getCollidingObjects();
+    QList<CircleItem *> getCollidingObjects();
 
     void addItem(QGraphicsItem *item);
-    bool collideWithObjects(PixmapItem *item, QPointF translationVector, bool enemy=false);
     bool collideWithObjects(Vehicle *item, QPointF translationVector, bool enemy=false);
     void processHeroMove(QKeyEvent* event);
     void processLaserShot(QMouseEvent* event);
@@ -44,16 +43,16 @@ public slots:
 private:
     void createTextItems();
     void createEnemies(int numberOfEnemies);
-    void createCollidingObjects();
+    void createObstacles();
     void updateTextItems();
     bool collideWithBorders(QRectF rect);
-    bool collideWithObjectsInScene(PixmapItem* item, QRectF rect, bool enemy=false);
-    QRectF getRectAfterTranslation(PixmapItem *item, QPointF translationVector);
+    bool collideWithBorders(CircleItem& circle);
+    bool collideWithObjectsInScene(Vehicle* item, CircleItem circle, bool enemy=false);
     CircleItem getCircleAfterTranslation(Vehicle* item, QPointF translationVector);
 
     Hero *hero;
     QList<Enemy*> enemies;
-    QList<QGraphicsItem*> collidingObjects;
+    QList<CircleItem*> obstacles;
     Laser *laser;
     QGraphicsTextItem *textItem;
     QGraphicsTextItem *pointsFrame;

@@ -8,6 +8,7 @@
 #include <QRect>
 #include <QDesktopWidget>
 #include <QDebug>
+#include <cmath>
 
 GraphicsScene::GraphicsScene(int x, int y, int width, int height)
     : QGraphicsScene(x , y, width, height)
@@ -20,13 +21,12 @@ GraphicsScene::GraphicsScene(int x, int y, int width, int height)
     screenHeight = screenGeometry.height();
 
     hero = new Hero(this);
-    hero->setPos(50,0);
+    hero->setPos(hero->radius(), hero->radius());
 
-//    createEnemies(3);
-    createCollidingObjects();
+    createEnemies(2);
+    createObstacles();
     laser = new Laser(this);
     createTextItems();
-
 }
 
 GraphicsScene::~GraphicsScene()
@@ -119,8 +119,8 @@ void GraphicsScene::processLaserShot(QMouseEvent *event)
     if(enemies.size() == 0)
     {
         score += (0.9/score*500000);
-        endOfGame = true;
-        showEndScreen();
+//        endOfGame = true;
+//        showEndScreen();
     }
 }
 
@@ -160,8 +160,15 @@ QList<Enemy*> GraphicsScene::getEnemies()
     return enemies;
 }
 
-QList<QGraphicsItem*> GraphicsScene::getCollidingObjects()
+QList<CircleItem *> GraphicsScene::getCollidingObjects()
 {
+    QList<CircleItem*> collidingObjects;
+    collidingObjects.append(obstacles);
+    foreach (Enemy* enemy, enemies) {
+        collidingObjects.append(enemy);
+    }
+    collidingObjects.append(hero);
+
     return collidingObjects;
 }
 
@@ -195,7 +202,7 @@ void GraphicsScene::createEnemies(int numberOfEnemies)
     }
 }
 
-void GraphicsScene::createCollidingObjects()
+void GraphicsScene::createObstacles()
 {
 //    QGraphicsRectItem* rect = new QGraphicsRectItem(screenWidth/6, screenHeight/9, 300, 80);
 //    rect->setBrush(Qt::green);
@@ -205,29 +212,26 @@ void GraphicsScene::createCollidingObjects()
 //    rect2->setBrush(Qt::green);
 //    addItem(rect2);
 
-//    collidingObjects.append(rect);
-//    collidingObjects.append(rect2);
+//    obstacles.append(rect);
+//    obstacles.append(rect2);
 
 //    QGraphicsEllipseItem* ellipse = new QGraphicsEllipseItem(screenWidth/6, screenHeight/9, 100, 100);
 //    ellipse->setBrush(Qt::green);
     Vehicle* ellipse = new Vehicle(screenWidth/6, screenHeight/9, 100, this);
-    collidingObjects.append(ellipse);
+    obstacles.append(ellipse);
 
 
 
-}
-
-bool GraphicsScene::collideWithObjects(PixmapItem *item, QPointF translationVector, bool enemy)
-{
-    QRectF newRect = getRectAfterTranslation(item, translationVector);
-    return collideWithBorders(newRect) || collideWithObjectsInScene(item, newRect, enemy);
 }
 
 bool GraphicsScene::collideWithObjects(Vehicle *item, QPointF translationVector, bool enemy)
 {
-    qDebug() << "Position of item=" << item->pos();
-    return false;
+    CircleItem newCircle = getCircleAfterTranslation(item, translationVector);
+
+    qDebug() << "Position of item=" << item->pos() << ", newCircle=" << newCircle.pos();
+    return collideWithBorders(newCircle) || collideWithObjectsInScene(item, newCircle);
 }
+
 
 bool GraphicsScene::collideWithBorders(QRectF rect)
 {
@@ -237,21 +241,33 @@ bool GraphicsScene::collideWithBorders(QRectF rect)
             || rect.bottom() > screenHeight);
 }
 
-bool GraphicsScene::collideWithObjectsInScene(PixmapItem* item, QRectF rect, bool enemy)
+bool GraphicsScene::collideWithBorders(CircleItem &circle)
+{
+    qDebug() << "POSITION=" << circle.pos() << ", radius=" << circle.radius();
+    return (circle.x()-circle.radius() < 0
+            || circle.x()+circle.radius() > screenWidth
+            || circle.y()-circle.radius() < 0
+            || circle.y()+circle.radius() > screenHeight);
+
+}
+
+
+bool GraphicsScene::collideWithObjectsInScene(Vehicle* item, CircleItem circle, bool enemy)
 {
     bool collide = false;
 
-    foreach (QGraphicsItem* otherItem, items())
+    foreach (CircleItem* otherItem, getCollidingObjects())
     {
-        if(otherItem == item || otherItem == textItem
-                || otherItem == pointsFrame || otherItem == laserInfo)
+        if(otherItem == item)
             continue;
-        QRectF otherRect = otherItem->sceneBoundingRect();
 
-        collide = !(otherRect.left() > rect.right()
-                    || otherRect.right() < rect.left()
-                    || otherRect.top() > rect.bottom()
-                    || otherRect.bottom() < rect.top());
+        double xDistanceBetweenCenters = std::fabs(circle.x() - otherItem->x());
+        double yDistanceBetweenCenters = std::fabs(circle.y() - otherItem->y());
+
+        double distanceBetweenCentersSquared = xDistanceBetweenCenters*xDistanceBetweenCenters + yDistanceBetweenCenters*yDistanceBetweenCenters;
+        double radiusSum = circle.radius() + otherItem->radius();
+        collide = (distanceBetweenCentersSquared < radiusSum*radiusSum );
+
         if(collide)
         {
             if(otherItem == hero && enemy)
@@ -262,31 +278,14 @@ bool GraphicsScene::collideWithObjectsInScene(PixmapItem* item, QRectF rect, boo
             return true;
         }
     }
+
     return false;
 }
 
-QRectF GraphicsScene::getRectAfterTranslation(PixmapItem *item, QPointF translationVector)
-{
-    QSizeF itemSize = item->size();
-    QPointF itemPos = item->pos();
-    double translationX = translationVector.x();
-    double translationY = translationVector.y();
-
-    double itemLeft = itemPos.x() + translationX;
-    double itemTop = itemPos.y() + translationY;
-
-    QRectF newRect;
-    newRect.setLeft(itemLeft);
-    newRect.setTop(itemTop);
-    newRect.setRight(itemLeft+itemSize.width());
-    newRect.setBottom(itemTop+itemSize.height());
-
-    return newRect;
-}
 
 CircleItem GraphicsScene::getCircleAfterTranslation(Vehicle *item, QPointF translationVector)
 {
-    QPointF itemPos = item->pos();
-    double translationX = translationVector.x();
-    double translationY = translationVector.y();
+    QPointF newCenter(item->x()+translationVector.x(), item->y()+translationVector.y());
+    CircleItem newCircle(newCenter.x(), newCenter.y(), item->radius());
+    return newCircle;
 }

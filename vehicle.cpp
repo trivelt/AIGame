@@ -5,7 +5,7 @@
 Vehicle::Vehicle(double x, double y, double radius, GraphicsScene *scene) :
     CircleItem(x, y, radius)
 {
-    scene->addItem(this);
+    scene->addItem(this->getGraphicsItem());
     this->scene = scene;
     setColor(Qt::blue);
 }
@@ -13,7 +13,7 @@ Vehicle::Vehicle(double x, double y, double radius, GraphicsScene *scene) :
 void Vehicle::setColor(Qt::GlobalColor color)
 {
     QBrush brush(color);
-    setBrush(brush);
+    getGraphicsItem()->setBrush(brush);
 }
 
 double Vehicle::getSpeed() const
