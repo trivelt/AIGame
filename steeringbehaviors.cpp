@@ -2,16 +2,21 @@
 #include "enemy.h"
 #include "vectorhelper.h"
 #include "utils.h"
+#include "graphicsscene.h"
 #include <algorithm>
+#include <QDebug>
 
-SteeringBehaviors::SteeringBehaviors(Enemy *owner, QObject *parent) : QObject(parent)
+SteeringBehaviors::SteeringBehaviors(Enemy *owner, GraphicsScene *scene, QObject *parent) :
+    QObject(parent),
+    scene(scene),
+    owner(owner)
 {
-    this->owner = owner;
+    hero = scene->getHero();
 }
 
 QVector2D SteeringBehaviors::calculate()
 {
-
+    return evade(hero);
 }
 
 QVector2D SteeringBehaviors::forwardComponent()
@@ -34,9 +39,8 @@ void SteeringBehaviors::setTarget(QVector2D target)
 
 }
 
-void SteeringBehaviors::setTargetAgent(Enemy* agent)
+void SteeringBehaviors::setTargetAgent(Vehicle* agent)
 {
-
 }
 
 void SteeringBehaviors::seekOn()
@@ -77,11 +81,15 @@ QVector2D SteeringBehaviors::seek(QVector2D targetPosition)
 
 QVector2D SteeringBehaviors::flee(QVector2D targetPosition)
 {
+    qDebug() << "Owner position=" << owner->getPosition() << ", targetPosition=" << targetPosition;
     const double panicDistanceSq = 100.0 * 100.0;
     if (VectorHelper::distanceSq(owner->getPosition(), targetPosition) > panicDistanceSq)
+    {
         return QVector2D(0.0, 0.0);
+    }
 
     QVector2D desiredVelocity = VectorHelper::normalize(owner->getPosition() - targetPosition) * owner->getMaxSpeed();
+    qDebug() << "Flee is returning here: desiredVelocity=" << desiredVelocity << ", ownerVelcity=" << owner->getVelocity();
     return (desiredVelocity - owner->getVelocity());
 }
 
@@ -103,7 +111,7 @@ QVector2D SteeringBehaviors::arrive(QVector2D targetPosition, Deceleration decel
     return QVector2D(0,0);
 }
 
-QVector2D SteeringBehaviors::pursuit(const Enemy *evader)
+QVector2D SteeringBehaviors::pursuit(const Vehicle *evader)
 {
     QVector2D toEvader = evader->getPosition() - owner->getPosition();
     double relativeHeading = QVector2D::dotProduct(owner->getHeading(), evader->getHeading());
@@ -117,10 +125,11 @@ QVector2D SteeringBehaviors::pursuit(const Enemy *evader)
     return seek(evader->getPosition() + evader->getVelocity() * lookAheadTime);
 }
 
-QVector2D SteeringBehaviors::evade(const Enemy *pursuer)
+QVector2D SteeringBehaviors::evade(const Vehicle *pursuer)
 {
     QVector2D toPursuer = pursuer->getPosition() - owner->getPosition();
     double lookAheadTime = toPursuer.length() / (owner->getMaxSpeed() + pursuer->getSpeed());
+    qDebug() << "Pursuer speed=" << pursuer->getSpeed();
     return flee(pursuer->getPosition() + pursuer->getVelocity() * lookAheadTime);
 }
 

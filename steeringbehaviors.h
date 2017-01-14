@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QVector2D>
+#include "vehicle.h"
 
 class Enemy;
 
@@ -17,7 +18,7 @@ class SteeringBehaviors : public QObject
 {
     Q_OBJECT
 public:
-    explicit SteeringBehaviors(Enemy* owner, QObject *parent = 0);
+    explicit SteeringBehaviors(Enemy* owner, GraphicsScene* scene, QObject *parent = 0);
 
     QVector2D calculate();
     QVector2D forwardComponent();
@@ -25,7 +26,7 @@ public:
 
     void setPath();
     void setTarget(QVector2D target);
-    void setTargetAgent(Enemy* agent);
+    void setTargetAgent(Vehicle *agent);
 
     void seekOn();
     void fleeOn();
@@ -43,17 +44,19 @@ private:
     QVector2D seek(QVector2D targetPosition);
     QVector2D flee(QVector2D targetPosition);
     QVector2D arrive(QVector2D targetPosition, Deceleration deceleration);
-    QVector2D pursuit(const Enemy* evader);
-    QVector2D evade(const Enemy* pursuer);
+    QVector2D pursuit(const Vehicle *evader);
+    QVector2D evade(const Vehicle* pursuer);
     QVector2D wander();
 
     Enemy* owner;
+    Vehicle* hero;
 
     double wanderRadius;
     double wanderDistance;
     double wanderJitter;
     QVector2D wanderTarget;
 
+    GraphicsScene* scene;
 };
 
 #endif // STEERINGBEHAVIORS_H

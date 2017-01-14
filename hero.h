@@ -9,6 +9,7 @@ class Hero : public Vehicle
 public:
     Hero(GraphicsScene* scene);
     void processKeyEvent(QKeyEvent* event);
+    void updateVelocity();
 
 private:
     void goUp();
@@ -16,6 +17,8 @@ private:
     void goRight();
     void goLeft();
     void go(int x, int y, int steps);
+
+    double timeFromLastKeyEvent;
 };
 
 #endif // HERO_H

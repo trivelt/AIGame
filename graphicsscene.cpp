@@ -50,6 +50,7 @@ void GraphicsScene::updateScene()
     if(endOfGame)
         return;
 
+    hero->updateVelocity();
     foreach (Enemy* enemy, enemies) {
         enemy->updateEnemy(10);
     }

@@ -10,6 +10,7 @@ class Vehicle : public CircleItem
 public:
     Vehicle(double x, double y, double radius, GraphicsScene* scene);
 
+    void setPos(double x, double y);
     void setColor(Qt::GlobalColor color);
     void setColor(QString colorString);
     double getSpeed() const;
