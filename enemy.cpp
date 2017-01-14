@@ -7,12 +7,13 @@
 #include <QTimer>
 
 Enemy::Enemy(GraphicsScene *scene) :
-    Vehicle(0, 0, 50, scene),
+    Vehicle(0, 0, 15, scene),
     maxForce(10),
     maxSpeed(50),
     maxTurnRate(100)
 {
     steering = new SteeringBehaviors(this);
+    setColor(Qt::red);
 }
 
 Enemy *Enemy::createRandomEnemy(GraphicsScene *scene, double screenWidth, double screenHeight)

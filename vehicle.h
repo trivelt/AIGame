@@ -11,6 +11,7 @@ public:
     Vehicle(double x, double y, double radius, GraphicsScene* scene);
 
     void setColor(Qt::GlobalColor color);
+    void setColor(QString colorString);
     double getSpeed() const;
     inline QVector2D getVelocity() const {return velocity;}
     inline QVector2D getPosition() const {return position;}

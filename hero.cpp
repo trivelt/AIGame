@@ -4,7 +4,7 @@
 
 Hero::Hero(GraphicsScene* scene) : Vehicle(0, 0, 16, scene)
 {
-    setColor(Qt::green);
+    setColor("#008000");
 }
 
 void Hero::processKeyEvent(QKeyEvent *event)

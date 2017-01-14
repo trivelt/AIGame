@@ -16,6 +16,14 @@ void Vehicle::setColor(Qt::GlobalColor color)
     getGraphicsItem()->setBrush(brush);
 }
 
+void Vehicle::setColor(QString colorString)
+{
+    QColor color;
+    color.setNamedColor(colorString);
+    QBrush brush(color);
+    getGraphicsItem()->setBrush(brush);
+}
+
 double Vehicle::getSpeed() const
 {
     return velocity.length();

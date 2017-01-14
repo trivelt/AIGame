@@ -23,8 +23,8 @@ GraphicsScene::GraphicsScene(int x, int y, int width, int height)
     hero = new Hero(this);
     hero->setPos(hero->radius(), hero->radius());
 
-    createEnemies(2);
     createObstacles();
+    createEnemies(1);
     laser = new Laser(this);
     createTextItems();
 }
@@ -206,24 +206,19 @@ void GraphicsScene::createEnemies(int numberOfEnemies)
 
 void GraphicsScene::createObstacles()
 {
-//    QGraphicsRectItem* rect = new QGraphicsRectItem(screenWidth/6, screenHeight/9, 300, 80);
-//    rect->setBrush(Qt::green);
-//    addItem(rect);
+    Vehicle* obstacle1 = new Vehicle(screenWidth/6, screenHeight/8, 100, this);
+    Vehicle* obstacle2 = new Vehicle(screenWidth/6, 6*screenHeight/8, 100, this);
+    Vehicle* obstacle3 = new Vehicle(4*screenWidth/6, screenHeight/7, 50, this);
+    Vehicle* obstacle4 = new Vehicle(5*screenWidth/6, screenHeight/7, 120, this);
+    Vehicle* obstacle5 = new Vehicle(4*screenWidth/6, 7*screenHeight/8, 100, this);
+    Vehicle* obstacle6 = new Vehicle(2.5*screenWidth/6, 4*screenHeight/8, 140, this);
 
-//    QGraphicsRectItem* rect2 = new QGraphicsRectItem(screenWidth/6, 7*screenHeight/9, 300, 80);
-//    rect2->setBrush(Qt::green);
-//    addItem(rect2);
-
-//    obstacles.append(rect);
-//    obstacles.append(rect2);
-
-//    QGraphicsEllipseItem* ellipse = new QGraphicsEllipseItem(screenWidth/6, screenHeight/9, 100, 100);
-//    ellipse->setBrush(Qt::green);
-    Vehicle* ellipse = new Vehicle(screenWidth/6, screenHeight/9, 100, this);
-    obstacles.append(ellipse);
-
-
-
+    obstacles.append(obstacle1);
+    obstacles.append(obstacle2);
+    obstacles.append(obstacle3);
+    obstacles.append(obstacle4);
+    obstacles.append(obstacle5);
+    obstacles.append(obstacle6);
 }
 
 bool GraphicsScene::collideWithObjects(Vehicle *item, QPointF translationVector, bool enemy)
