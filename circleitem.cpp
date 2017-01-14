@@ -8,7 +8,6 @@ CircleItem::CircleItem(double x, double y, double radius) :
 {
     ellipse = new QGraphicsEllipseItem(0, 0, radius*2, radius*2);
     setPos(x, y);
-    qDebug() << "Created circle x=" << x << ", y=" << y << ", r=" << radius <<", ellipsePos=" << ellipse->pos();
 }
 
 CircleItem::~CircleItem()

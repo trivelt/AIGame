@@ -119,8 +119,8 @@ void GraphicsScene::processLaserShot(QMouseEvent *event)
     if(enemies.size() == 0)
     {
         score += (0.9/score*500000);
-//        endOfGame = true;
-//        showEndScreen();
+        endOfGame = true;
+        showEndScreen();
     }
 }
 
@@ -160,12 +160,14 @@ QList<Enemy*> GraphicsScene::getEnemies()
     return enemies;
 }
 
-QList<CircleItem *> GraphicsScene::getCollidingObjects()
+QList<CircleItem *> GraphicsScene::getCollidingObjects(bool withEnemies)
 {
     QList<CircleItem*> collidingObjects;
     collidingObjects.append(obstacles);
-    foreach (Enemy* enemy, enemies) {
-        collidingObjects.append(enemy);
+    if(withEnemies)
+    {
+        foreach (Enemy* enemy, enemies)
+            collidingObjects.append(enemy);
     }
     collidingObjects.append(hero);
 
@@ -227,9 +229,7 @@ void GraphicsScene::createObstacles()
 bool GraphicsScene::collideWithObjects(Vehicle *item, QPointF translationVector, bool enemy)
 {
     CircleItem newCircle = getCircleAfterTranslation(item, translationVector);
-
-    qDebug() << "Position of item=" << item->pos() << ", newCircle=" << newCircle.pos();
-    return collideWithBorders(newCircle) || collideWithObjectsInScene(item, newCircle);
+    return collideWithBorders(newCircle) || collideWithObjectsInScene(item, newCircle, enemy);
 }
 
 
@@ -243,7 +243,6 @@ bool GraphicsScene::collideWithBorders(QRectF rect)
 
 bool GraphicsScene::collideWithBorders(CircleItem &circle)
 {
-    qDebug() << "POSITION=" << circle.pos() << ", radius=" << circle.radius();
     return (circle.x()-circle.radius() < 0
             || circle.x()+circle.radius() > screenWidth
             || circle.y()-circle.radius() < 0

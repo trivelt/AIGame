@@ -26,7 +26,7 @@ public:
     QGraphicsTextItem* getTextView();
     Hero* getHero();
     QList<Enemy*> getEnemies();
-    QList<CircleItem *> getCollidingObjects();
+    QList<CircleItem *> getCollidingObjects(bool withEnemies=true);
 
     void addItem(QGraphicsItem *item);
     bool collideWithObjects(Vehicle *item, QPointF translationVector, bool enemy=false);
