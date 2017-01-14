@@ -46,7 +46,10 @@ private:
     QVector2D arrive(QVector2D targetPosition, Deceleration deceleration);
     QVector2D pursuit(const Vehicle *evader);
     QVector2D evade(const Vehicle* pursuer);
+    QVector2D hide(Vehicle *target);
+    QVector2D getHidingPosition(const QVector2D& posOb, const double radiusOb, const QVector2D& posTarget);
     QVector2D wander();
+
 
     Enemy* owner;
     Vehicle* hero;

@@ -5,6 +5,7 @@
 #include "graphicsscene.h"
 #include <algorithm>
 #include <QDebug>
+#include <limits>
 
 SteeringBehaviors::SteeringBehaviors(Enemy *owner, GraphicsScene *scene, QObject *parent) :
     QObject(parent),
@@ -16,7 +17,7 @@ SteeringBehaviors::SteeringBehaviors(Enemy *owner, GraphicsScene *scene, QObject
 
 QVector2D SteeringBehaviors::calculate()
 {
-    return evade(hero);
+    return hide(hero);
 }
 
 QVector2D SteeringBehaviors::forwardComponent()
@@ -131,6 +132,39 @@ QVector2D SteeringBehaviors::evade(const Vehicle *pursuer)
     double lookAheadTime = toPursuer.length() / (owner->getMaxSpeed() + pursuer->getSpeed());
     qDebug() << "Pursuer speed=" << pursuer->getSpeed();
     return flee(pursuer->getPosition() + pursuer->getVelocity() * lookAheadTime);
+}
+
+QVector2D SteeringBehaviors::hide(Vehicle *target)
+{
+    double distToClosest = std::numeric_limits<double>::max();
+    QVector2D bestHidingSpot;
+
+    foreach (CircleItem* curOb, scene->getObstacles())
+    {
+        QVector2D hidingSpot = getHidingPosition(QVector2D(curOb->pos()), curOb->radius(), QVector2D(target->pos()));
+        double dist = VectorHelper::distanceSq(hidingSpot, QVector2D(owner->pos()));
+
+        if(dist < distToClosest)
+        {
+            distToClosest = dist;
+            bestHidingSpot = hidingSpot;
+        }
+    }
+
+    if(distToClosest == std::numeric_limits<double>::max())
+    {
+        return evade(target);
+    }
+
+    return arrive(bestHidingSpot, FAST);
+}
+
+QVector2D SteeringBehaviors::getHidingPosition(const QVector2D &posOb, const double radiusOb, const QVector2D &posTarget)
+{
+    const double distanceFromBoundary = 30.0;
+    double distAway = radiusOb + distanceFromBoundary;
+    QVector2D toOb = VectorHelper::normalize(posOb - posTarget);
+    return (toOb * distAway) + posOb;
 }
 
 QVector2D SteeringBehaviors::wander()

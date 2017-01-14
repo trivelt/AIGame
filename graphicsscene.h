@@ -26,6 +26,7 @@ public:
     QGraphicsTextItem* getTextView();
     Hero* getHero();
     QList<Enemy*> getEnemies();
+    QList<CircleItem*> getObstacles();
     QList<CircleItem *> getCollidingObjects(bool withEnemies=true);
 
     void addItem(QGraphicsItem *item);

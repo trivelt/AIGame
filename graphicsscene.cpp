@@ -161,6 +161,11 @@ QList<Enemy*> GraphicsScene::getEnemies()
     return enemies;
 }
 
+QList<CircleItem*> GraphicsScene::getObstacles()
+{
+    return obstacles;
+}
+
 QList<CircleItem *> GraphicsScene::getCollidingObjects(bool withEnemies)
 {
     QList<CircleItem*> collidingObjects;
