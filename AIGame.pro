@@ -24,7 +24,6 @@ SOURCES += main.cpp\
     laser.cpp \
     steeringbehaviors.cpp \
     vectorhelper.cpp \
-    obstacle.cpp \
     vehicle.cpp \
     circleitem.cpp
 
@@ -39,7 +38,6 @@ HEADERS  += mainwindow.h \
     laser.h \
     steeringbehaviors.h \
     vectorhelper.h \
-    obstacle.h \
     vehicle.h \
     circleitem.h
 
