@@ -59,6 +59,8 @@ void Enemy::updateEnemy(double timeElapsed)
     if(!scene->collideWithObjects(this, QPointF(xMove, yMove)))
     {
         setPos(pos().x() + xMove, pos().y() + yMove);
+        position.setX(pos().x()+xMove);
+        position.setY(pos().y()+yMove);
     }
 }
 
@@ -73,8 +75,8 @@ void Enemy::updateAI(double timeElapsed)
     velocity += acceleration*timeElapsed;
     VectorHelper::truncateVector(velocity, maxSpeed);
 
-    // update position
-    position += velocity*timeElapsed;
+//     update position
+//    position += velocity*timeElapsed;
 
     if (velocity.lengthSquared() > VectorHelper::epsilon)
     {

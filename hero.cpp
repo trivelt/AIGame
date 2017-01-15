@@ -54,6 +54,51 @@ void Hero::processKeyEvent(QKeyEvent *event)
 //    scene->addItem(rect);
 //    Utils::sleep(500);
 //    scene->removeItem(rect);
+
+
+    double wallDetectionFeelerLength = 60;
+    QVector2D centerFeeler(getPosition() + wallDetectionFeelerLength * getHeading());
+    QVector2D centerFeelerToRotations(getPosition() + 40 * getHeading());
+    QVector2D leftFeeler(VectorHelper::rotateVector(getPosition(), -0.785398, centerFeelerToRotations));
+    QVector2D rightFeeler(VectorHelper::rotateVector(getPosition(), 0.785398, centerFeelerToRotations));
+
+//    scene->getDebugFrame()->setDebugText("Center feeler=" + QString::number(centerFeeler.x(), 'f', 2) + ", " + QString::number(centerFeeler.y(), 'f', 2));
+//    qDebug() << "Center feeler=" << centerFeeler;
+
+
+//    QVector2D rotatedCenterToLeft = VectorHelper::rotateVector(getPosition(), -0.785398, centerFeeler);
+//    qDebug() << "rotatedCenterToLeft=" << rotatedCenterToLeft << ", angle 0.785398 in deg=" << VectorHelper::radToDeg(0.785398);
+//    QVector2D leftFeeler = rotatedCenterToLeft;
+//    leftFeeler.normalize();
+
+//    QVector2D rightFeeler = VectorHelper::rotateVector(centerFeeler, -0.785398);
+//    QVector2D rightFeeler;
+
+    if(DebugFrame::debugMode() && DebugFrame::feelerLines())
+    {
+        QLineF centerLineOb(getPosition().x(), getPosition().y(), centerFeeler.x(), centerFeeler.y());
+        QGraphicsLineItem* lineLeft = new QGraphicsLineItem(QLineF(getPosition().x(), getPosition().y(), leftFeeler.x(), leftFeeler.y()));
+        QGraphicsLineItem* lineRight = new QGraphicsLineItem(QLineF(getPosition().x(), getPosition().y(), rightFeeler.x(), rightFeeler.y()));
+        QGraphicsLineItem* lineCenter = new QGraphicsLineItem(centerLineOb);
+        qDebug() << "LineCenter=" << centerLineOb;
+        QPen pen;
+        pen.setColor(Qt::green);
+        pen.setWidth(5);
+        lineLeft->setPen(pen);
+        lineLeft->setOpacity(0.6);
+        scene->addItem(lineLeft);
+        lineRight->setPen(pen);
+        lineRight->setOpacity(0.6);
+        scene->addItem(lineRight);
+        lineCenter->setPen(pen);
+        lineCenter->setOpacity(0.6);
+        scene->addItem(lineCenter);
+        Utils::sleep(15);
+        scene->removeItem(lineLeft);
+        scene->removeItem(lineRight);
+        scene->removeItem(lineCenter);
+    }
+
 }
 
 void Hero::updateVelocity()

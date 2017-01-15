@@ -1,7 +1,8 @@
 #include "debugframe.h"
 #include <QDebug>
 
-bool DebugFrame::debugModeTurned = false;
+bool DebugFrame::sDebugModeTurned = false;
+bool DebugFrame::sFeelerLines = false;
 
 DebugFrame::DebugFrame(QGraphicsTextItem *textItem)
 {
@@ -12,12 +13,22 @@ DebugFrame::DebugFrame(QGraphicsTextItem *textItem)
 
 bool DebugFrame::debugMode()
 {
-    return debugModeTurned;
+    return sDebugModeTurned;
 }
 
 void DebugFrame::turnDebugMode()
 {
-    debugModeTurned = !debugModeTurned;
+    sDebugModeTurned = !sDebugModeTurned;
+}
+
+void DebugFrame::showFeelerLines()
+{
+    sFeelerLines = !sFeelerLines;
+}
+
+bool DebugFrame::feelerLines()
+{
+    return sFeelerLines;
 }
 
 void DebugFrame::setHeroPosition(double x, double y)

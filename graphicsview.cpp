@@ -20,12 +20,18 @@ void GraphicsView::keyPressEvent(QKeyEvent *event)
         DebugFrame::turnDebugMode();
         gScene->showDebugFrame();
     }
-    if(key == Qt::Key_N && DebugFrame::debugMode())
+    else if(key == Qt::Key_L)
+    {
+        DebugFrame::showFeelerLines();
+    }
+    else if(key == Qt::Key_N && DebugFrame::debugMode())
     {
         gScene->debugNextEnemy();
     }
-
-    gScene->processHeroMove(event);
+    else
+    {
+        gScene->processHeroMove(event);
+    }
 }
 
 void GraphicsView::mousePressEvent(QMouseEvent *event)

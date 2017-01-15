@@ -45,11 +45,45 @@ double VectorHelper::lengthSq(const QVector2D &vector)
     return (vector.x()*vector.x() + vector.y()*vector.y());
 }
 
-QVector2D VectorHelper::rotateVector(const QVector2D &vector, double radians)
+QVector2D VectorHelper::rotateVector(const QVector2D &center, double radians, QVector2D point)
 {
-    double newX = vector.x() * cos(radians) - vector.y() * sin(radians);
-    double newY = vector.x() * sin(radians) + vector.y() * cos(radians);
-    return QVector2D(newX, newY);
+    double s = sin(radians);
+    double c = cos(radians);
+
+    double pointX = point.x();
+    double pointY = point.y();
+    pointX -= center.x();
+    pointY -= center.y();
+
+    double xNew = pointX * c - pointY * s;
+    double yNew = pointX * s + pointY * c;
+
+    pointX = xNew + center.x();
+    pointY = yNew + center.y();
+
+    return QVector2D(pointX, pointY);
+
+
+//    float s = sin(angle);
+//     float c = cos(angle);
+
+//     // translate point back to origin:
+//     p.x -= cx;
+//     p.y -= cy;
+
+//     // rotate point
+//     float xnew = p.x * c - p.y * s;
+//     float ynew = p.x * s + p.y * c;
+
+//     // translate point back:
+//     p.x = xnew + cx;
+//     p.y = ynew + cy;
+//     return p;
+
+
+//    double newX = vector.x() * cos(radians) - vector.y() * sin(radians);
+//    double newY = vector.x() * sin(radians) + vector.y() * cos(radians);
+//    return QVector2D(newX, newY);
 }
 
 QVector2D VectorHelper::pointToLocalSpace(const QVector2D &point, QVector2D heading, QVector2D pos)

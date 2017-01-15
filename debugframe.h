@@ -12,6 +12,8 @@ public:
     DebugFrame(QGraphicsTextItem* textItem);
     static bool debugMode();
     static void turnDebugMode();
+    static void showFeelerLines();
+    static bool feelerLines();
 
     void setHeroPosition(double x, double y);
     void setMousePosition(QPointF position);
@@ -28,7 +30,8 @@ private:
     QVector2D targetVector;
     QString debugText;
 
-    static bool debugModeTurned;
+    static bool sDebugModeTurned;
+    static bool sFeelerLines;
 
 };
 
