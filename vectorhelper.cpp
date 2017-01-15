@@ -84,3 +84,19 @@ QVector2D VectorHelper::pointToWorldSpace(const QVector2D &point, QVector2D head
 
     return QVector2D(rotatedX, rotatedY);
 }
+
+double VectorHelper::vectorToAngleRad(QVector2D vector)
+{
+    return atan2(vector.y(), vector.x());
+}
+
+double VectorHelper::vectorToAngleDeg(QVector2D vector)
+{
+    double rad = vectorToAngleRad(vector);
+    return radToDeg(rad);
+}
+
+double VectorHelper::radToDeg(double angle)
+{
+    return angle * 180 / 3.14159265;
+}

@@ -23,6 +23,7 @@ public:
     void setupScene();
     void clearScene();
     void showEndScreen();
+    void showDebugFrame();
 
     QGraphicsTextItem* getTextView();
     DebugFrame* getDebugFrame();
@@ -57,6 +58,7 @@ private:
     Hero *hero;
     QList<Enemy*> enemies;
     QList<CircleItem*> obstacles;
+    QList<CircleItem*> boundRadiusCircles;
     Laser *laser;
     QGraphicsTextItem *textItem;
     QGraphicsTextItem *pointsFrame;

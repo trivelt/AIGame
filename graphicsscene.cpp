@@ -3,6 +3,7 @@
 #include "utils.h"
 #include "vehicle.h"
 
+#include <typeinfo>
 #include <QTimer>
 #include <QApplication>
 #include <QRect>
@@ -55,7 +56,7 @@ void GraphicsScene::updateScene()
 
     hero->updateVelocity();
     foreach (Enemy* enemy, enemies) {
-        enemy->updateEnemy(100);
+        enemy->updateEnemy(10);
     }
 
     updateTextItems();
@@ -102,6 +103,39 @@ void GraphicsScene::showEndScreen()
     endText->setHtml("<h1>GAME OVER</h1><br /> <br />&nbsp;&nbsp;&nbsp;Your score: " + QString::number(score) + " points");
     endText->setZValue(150);
     addItem(endText);
+}
+
+void GraphicsScene::showDebugFrame()
+{
+    bool shouldBeVisible = !textItem->isVisible();
+    textItem->setVisible(shouldBeVisible);
+
+    if(shouldBeVisible)
+    {
+        foreach (CircleItem* obstacle, obstacles)
+        {
+            CircleItem* boundingRadiusCircle = new CircleItem(obstacle->pos().x(), obstacle->pos().y(), obstacle->boundingRadius());
+            QBrush brush(Qt::yellow);
+            boundingRadiusCircle->getGraphicsItem()->setBrush(brush);
+            boundingRadiusCircle->getGraphicsItem()->setZValue(-10);
+            boundingRadiusCircle->getGraphicsItem()->setOpacity(0.1);
+            addItem(boundingRadiusCircle->getGraphicsItem());
+            boundRadiusCircles.append(boundingRadiusCircle);
+        }
+    }
+    else
+    {
+        foreach (QGraphicsItem* item, items())
+        {
+            if(typeid(*item) == typeid(QGraphicsRectItem))
+                removeItem(item);
+        }
+        foreach (CircleItem* circle, boundRadiusCircles)
+        {
+            removeItem(circle->getGraphicsItem());
+        }
+        boundRadiusCircles.clear();
+    }
 }
 
 void GraphicsScene::processHeroMove(QKeyEvent *event)
@@ -205,14 +239,15 @@ QList<CircleItem *> GraphicsScene::getCollidingObjects(bool withEnemies)
  void GraphicsScene::createTextItems()
  {
      textItem = new QGraphicsTextItem();
+
      textItem->setPos(7*screenWidth/8, screenHeight-100);
      textItem->setHtml("Debug info");
      QFont font;
      font.setPointSize(10);
      textItem->setFont(font);
-#ifdef DEBUG_GAME
      addItem(textItem);
-#endif
+     textItem->setVisible(DebugFrame::debugMode());
+
      debugFrame = new DebugFrame(textItem);
 
      pointsFrame = new QGraphicsTextItem();
@@ -232,12 +267,10 @@ void GraphicsScene::createEnemies(int numberOfEnemies)
     {
         Enemy* enemy = Enemy::createRandomEnemy(this, screenWidth, screenHeight);
 
-#ifdef DEBUG_GAME
-        if(i==0)
+        if(i==0 && DebugFrame::debugMode())
         {
             enemy->selectToDebugInfo(true);
         }
-#endif
         enemies.append(enemy);
     }
 }

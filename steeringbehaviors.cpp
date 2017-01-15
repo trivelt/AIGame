@@ -19,11 +19,15 @@ SteeringBehaviors::SteeringBehaviors(Enemy *owner, GraphicsScene *scene, QObject
 QVector2D SteeringBehaviors::calculate()
 {
     QVector2D steeringForce;
-    steeringForce += wallAvoidance();
+//    steeringForce += wallAvoidance();
     steeringForce += obstacleAvoidance();
+    if(owner->isSelectedToDebugInfo())
+    {
+        scene->getDebugFrame()->setDebugText("obst.Avod. frc=" + QString::number(steeringForce.x(), 'f', 2) + ", " + QString::number(steeringForce.y(), 'f', 2));
+    }
     steeringForce += hide(hero);
-    steeringForce += evade(hero);
-    steeringForce += cohesion();
+//    steeringForce += evade(hero);
+//    steeringForce += cohesion();
 
 
     VectorHelper::truncateVector(steeringForce, owner->getMaxForce());
@@ -222,6 +226,20 @@ QVector2D SteeringBehaviors::obstacleAvoidance()
     double minDetectionBoxLength = 40;
     double dBoxLength = minDetectionBoxLength + (owner->getSpeed()/owner->getMaxSpeed()) * minDetectionBoxLength;
 
+
+    if(DebugFrame::debugMode())
+    {
+        QGraphicsRectItem* rect = new QGraphicsRectItem(owner->pos().x(), owner->pos().y()-owner->radius(), dBoxLength, owner->radius()*2);
+        rect->setTransformOriginPoint(owner->pos());
+        rect->setRotation(VectorHelper::vectorToAngleDeg(owner->getHeading()));
+        QPen pen;
+        pen.setColor(Qt::red);
+        pen.setWidth(1);
+        rect->setPen(pen);
+        rect->setOpacity(0.1);
+        scene->addItem(rect);
+    }
+
     CircleItem* closestIntersectingObstacle = NULL;
     double distToClosestIP = std::numeric_limits<double>::max();
     QVector2D localPosOfClosestObstacle;
@@ -358,7 +376,7 @@ QVector2D SteeringBehaviors::wallAvoidance()
         if(distToClosestIP < std::numeric_limits<double>::max())
         {
             QVector2D overShoot = feeler-QVector2D(closestPoint);
-            steeringForce = VectorHelper::perpendicular(closestWall) * overShoot.length();
+            steeringForce = VectorHelper::perpendicular(closestPoint) * overShoot.length();
         }
     }
 

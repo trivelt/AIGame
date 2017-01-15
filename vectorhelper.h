@@ -15,6 +15,9 @@ public:
     static QVector2D rotateVector(const QVector2D& vector, double radians);
     static QVector2D pointToLocalSpace(const QVector2D &point, QVector2D heading, QVector2D pos);
     static QVector2D pointToWorldSpace(const QVector2D& point, QVector2D heading, QVector2D pos);
+    static double vectorToAngleDeg(QVector2D vector);
+    static double vectorToAngleRad(QVector2D vector);
+    static double radToDeg(double angle);
 
     static constexpr double epsilon = 0.00000001;
 

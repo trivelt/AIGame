@@ -14,13 +14,16 @@ void GraphicsView::keyPressEvent(QKeyEvent *event)
 //    Logger::log("keyPressEvent " + event->text());
     GraphicsScene* gScene = (GraphicsScene*)scene();
 
-#ifdef DEBUG_GAME
     int key = event->key();
-    if(key == Qt::Key_N)
+    if(key == Qt::Key_D)
+    {
+        DebugFrame::turnDebugMode();
+        gScene->showDebugFrame();
+    }
+    if(key == Qt::Key_N && DebugFrame::debugMode())
     {
         gScene->debugNextEnemy();
     }
-#endif
 
     gScene->processHeroMove(event);
 }
