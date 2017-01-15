@@ -10,6 +10,7 @@ public:
     CircleItem(double x, double y, double radiusVal);
     virtual ~CircleItem();
     double radius() const;
+    double boundingRadius() const;
     double x();
     double y();
     void setPos(double x, double y);

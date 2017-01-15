@@ -20,6 +20,11 @@ double CircleItem::radius() const
     return radiusVal;
 }
 
+double CircleItem::boundingRadius() const
+{
+    return radiusVal*1.5;
+}
+
 double CircleItem::x()
 {
     return xVal;

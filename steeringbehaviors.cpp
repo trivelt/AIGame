@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <QDebug>
 #include <limits>
+#include <cmath>
 
 SteeringBehaviors::SteeringBehaviors(Enemy *owner, GraphicsScene *scene, QObject *parent) :
     QObject(parent),
@@ -17,7 +18,12 @@ SteeringBehaviors::SteeringBehaviors(Enemy *owner, GraphicsScene *scene, QObject
 
 QVector2D SteeringBehaviors::calculate()
 {
-    return hide(hero);
+    QVector2D steeringForce(0,0);
+    steeringForce += obstacleAvoidance();
+    steeringForce += pursuit(hero) * 5;
+
+    VectorHelper::truncateVector(steeringForce, owner->getMaxForce());
+    return steeringForce;
 }
 
 QVector2D SteeringBehaviors::forwardComponent()
@@ -177,4 +183,69 @@ QVector2D SteeringBehaviors::wander()
     QVector2D targetLocal = wanderTarget + QVector2D(wanderDistance, 0);
 //    QVector2D targetWorld;
     return (targetLocal - owner->getPosition());
+}
+
+QVector2D SteeringBehaviors::obstacleAvoidance()
+{
+    double minDetectionBoxLength = 40;
+    double dBoxLength = minDetectionBoxLength + (owner->getSpeed()/owner->getMaxSpeed()) * minDetectionBoxLength;
+
+    CircleItem* closestIntersectingObstacle = NULL;
+    double distToClosestIP = std::numeric_limits<double>::max();
+    QVector2D localPosOfClosestObstacle;
+
+    foreach (CircleItem* obstacle, scene->getObstacles())
+    {
+        // instead of tagging
+        QVector2D distTo = QVector2D(obstacle->pos()) - QVector2D(owner->pos());
+        double range = obstacle->boundingRadius() + owner->boundingRadius();
+        if(VectorHelper::lengthSq(distTo) < range*range)
+        {
+
+            QVector2D localPos = VectorHelper::pointToLocalSpace(QVector2D(obstacle->pos()), owner->getHeading(), owner->getSide(), QVector2D(owner->pos()));
+            if(localPos.x() >= 0)
+            {
+                double expandedRadius = obstacle->boundingRadius() + owner->boundingRadius();
+                if(fabs(localPos.y()) < expandedRadius)
+                {
+                    double cX = localPos.x();
+                    double cY = localPos.y();
+
+                    double sqrtPart = sqrt(expandedRadius*expandedRadius - cY*cY);
+                    double ip = cX - sqrtPart;
+
+                    if(ip <= 0.0)
+                    {
+                        ip = cX + sqrtPart;
+                    }
+
+                    if(ip < distToClosestIP)
+                    {
+                        distToClosestIP = ip;
+                        closestIntersectingObstacle = obstacle;
+                        localPosOfClosestObstacle = localPos;
+                    }
+                }
+            }
+        }
+    }
+
+
+    QVector2D steeringForce;
+    if(closestIntersectingObstacle)
+    {
+        double multiplier = 1.0 + (dBoxLength - localPosOfClosestObstacle.x()) / dBoxLength;
+        steeringForce.setY( (closestIntersectingObstacle->boundingRadius() - localPosOfClosestObstacle.y()) * multiplier); // boundRadius?
+
+        const double breakingWeight = 0.2;
+        steeringForce.setX( (closestIntersectingObstacle->boundingRadius() - localPosOfClosestObstacle.x()) * breakingWeight); // boundingRadius
+    }
+
+    QVector2D localStartPoint(0,0);
+
+    QVector2D worldStartPoint = VectorHelper::pointToWorldSpace(localStartPoint, owner->getHeading(), QVector2D(owner->pos()) );
+    QVector2D worldEndPoint = VectorHelper::pointToWorldSpace(steeringForce, owner->getHeading(), QVector2D(owner->pos()) );
+
+    return QVector2D(worldEndPoint-worldStartPoint);
+
 }
