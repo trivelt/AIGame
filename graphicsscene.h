@@ -9,6 +9,7 @@
 #include "hero.h"
 #include "enemy.h"
 #include "laser.h"
+#include "debugframe.h"
 
 class PixmapItem;
 
@@ -24,6 +25,8 @@ public:
     void showEndScreen();
 
     QGraphicsTextItem* getTextView();
+    DebugFrame* getDebugFrame();
+    void debugNextEnemy();
     Hero* getHero();
     QList<Enemy*> getEnemies();
     QList<CircleItem*> getObstacles();
@@ -58,10 +61,12 @@ private:
     QGraphicsTextItem *textItem;
     QGraphicsTextItem *pointsFrame;
     QGraphicsTextItem* laserInfo;
+    DebugFrame* debugFrame;
     int screenWidth;
     int screenHeight;
     bool endOfGame;
     double score;
+    int numberOfDebuggedEnemy;
 };
 
 #endif //__GRAPHICSSCENE__H__

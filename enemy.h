@@ -19,12 +19,18 @@ public:
     inline double getMaxSpeed() const {return maxSpeed;}
     inline double getMaxTurnRate() const {return maxTurnRate;}
 
+    void selectToDebugInfo(bool select);
+    bool isSelectedToDebugInfo();
+
 private:
     SteeringBehaviors* steering;
     double maxForce;
     double maxSpeed;
     double mass;
     double maxTurnRate;
+
+    bool selectedToDebugInfo;
+    Qt::GlobalColor defaultColor;
 
 };
 

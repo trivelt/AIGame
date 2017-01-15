@@ -88,7 +88,11 @@ void Hero::go(int x, int y, int steps)
             int yPos = posPoint.y();
             setPos(xPos+x, yPos+y);
             position = QVector2D(pos()); //TODO: to improve
-            scene->getTextView()->setHtml("x=" + QString::number(xPos+x) + ", y=" + QString::number(yPos+y));
+
+#ifdef DEBUG_GAME
+            scene->getDebugFrame()->setHeroPosition(xPos+x, yPos+y);
+#endif
+//            scene->getTextView()->setHtml("x=" + QString::number(xPos+x) + ", y=" + QString::number(yPos+y));
         }
         else
         {

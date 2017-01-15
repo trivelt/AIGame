@@ -8,14 +8,15 @@
 
 Enemy::Enemy(GraphicsScene *scene) :
     Vehicle(0, 0, 15, scene),
-    maxForce(10),
-    maxSpeed(1),
+    maxForce(2),
+    maxSpeed(1.7),
     maxTurnRate(100),
     mass(1)
 {
     steering = new SteeringBehaviors(this, scene);
-
-    setColor(Qt::red);
+    selectedToDebugInfo = false;
+    defaultColor = Qt::red;
+    setColor(defaultColor);
     getGraphicsItem()->setZValue(1000);
 }
 
@@ -49,6 +50,13 @@ void Enemy::updateEnemy(double timeElapsed)
     updateAI(timeElapsed);
     double xMove = heading.x() * getSpeed();
     double yMove = heading.y() * getSpeed();
+
+#ifdef DEBUG_GAME
+    if(selectedToDebugInfo)
+    {
+        scene->getDebugFrame()->setAgentTargetVector(heading);
+    }
+#endif
 
     if(!scene->collideWithObjects(this, QPointF(xMove, yMove)))
     {
@@ -145,3 +153,20 @@ void Enemy::updateAI(double timeElapsed)
     }
 }
 
+void Enemy::selectToDebugInfo(bool select)
+{
+    selectedToDebugInfo = select;
+    if(selectedToDebugInfo)
+    {
+        setColor(Qt::black);
+    }
+    else
+    {
+        setColor(defaultColor);
+    }
+}
+
+bool Enemy::isSelectedToDebugInfo()
+{
+    return selectedToDebugInfo;
+}

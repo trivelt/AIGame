@@ -13,6 +13,15 @@ void GraphicsView::keyPressEvent(QKeyEvent *event)
 {
 //    Logger::log("keyPressEvent " + event->text());
     GraphicsScene* gScene = (GraphicsScene*)scene();
+
+#ifdef DEBUG_GAME
+    int key = event->key();
+    if(key == Qt::Key_N)
+    {
+        gScene->debugNextEnemy();
+    }
+#endif
+
     gScene->processHeroMove(event);
 }
 
@@ -21,3 +30,4 @@ void GraphicsView::mousePressEvent(QMouseEvent *event)
     GraphicsScene* gScene = (GraphicsScene*)scene();
     gScene->processLaserShot(event);
 }
+

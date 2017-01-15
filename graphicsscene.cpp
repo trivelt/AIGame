@@ -15,29 +15,32 @@ GraphicsScene::GraphicsScene(int x, int y, int width, int height)
 {    
     Utils::initRandoms();
     endOfGame = false;
+    numberOfDebuggedEnemy = 0;
     score = 0;
     QRect screenGeometry = QApplication::desktop()->screenGeometry();
     screenWidth = screenGeometry.width();
     screenHeight = screenGeometry.height();
 
+    createTextItems();
+    createObstacles();
+
     hero = new Hero(this);
     hero->setPos(hero->radius(), hero->radius());
 
-    createObstacles();
-    createEnemies(1);
+    createEnemies(3);
     laser = new Laser(this);
-    createTextItems();
 }
 
 GraphicsScene::~GraphicsScene()
 {
     delete hero;
-    hero = nullptr;
+    hero = NULL;
 
     foreach (Enemy* enemy, enemies) {
         enemies.removeOne(enemy);
         delete enemy;
     }
+    delete debugFrame;
 }
 
 void GraphicsScene::setupScene()
@@ -52,7 +55,7 @@ void GraphicsScene::updateScene()
 
     hero->updateVelocity();
     foreach (Enemy* enemy, enemies) {
-        enemy->updateEnemy(10);
+        enemy->updateEnemy(100);
     }
 
     updateTextItems();
@@ -151,6 +154,25 @@ QGraphicsTextItem* GraphicsScene::getTextView()
     return textItem;
 }
 
+DebugFrame* GraphicsScene::getDebugFrame()
+{
+    return debugFrame;
+}
+
+void GraphicsScene::debugNextEnemy()
+{
+    int numberOfEnemies = enemies.size();
+    numberOfDebuggedEnemy++;
+    numberOfDebuggedEnemy %= numberOfEnemies;
+    for(int i=0; i<numberOfEnemies; i++)
+    {
+        if(i==numberOfDebuggedEnemy)
+            enemies.at(i)->selectToDebugInfo(true);
+        else
+            enemies.at(i)->selectToDebugInfo(false);
+    }
+}
+
 Hero* GraphicsScene::getHero()
 {
     return hero;
@@ -183,12 +205,15 @@ QList<CircleItem *> GraphicsScene::getCollidingObjects(bool withEnemies)
  void GraphicsScene::createTextItems()
  {
      textItem = new QGraphicsTextItem();
-     textItem->setPos(screenWidth/2, screenHeight-80);
-     textItem->setHtml("TEST 123");
+     textItem->setPos(7*screenWidth/8, screenHeight-100);
+     textItem->setHtml("Debug info");
      QFont font;
-     font.setPointSize(20);
+     font.setPointSize(10);
      textItem->setFont(font);
+#ifdef DEBUG_GAME
      addItem(textItem);
+#endif
+     debugFrame = new DebugFrame(textItem);
 
      pointsFrame = new QGraphicsTextItem();
      pointsFrame->setPos(screenWidth-100, 10);
@@ -206,6 +231,13 @@ void GraphicsScene::createEnemies(int numberOfEnemies)
     for(int i=0; i<numberOfEnemies; i++)
     {
         Enemy* enemy = Enemy::createRandomEnemy(this, screenWidth, screenHeight);
+
+#ifdef DEBUG_GAME
+        if(i==0)
+        {
+            enemy->selectToDebugInfo(true);
+        }
+#endif
         enemies.append(enemy);
     }
 }
@@ -278,7 +310,6 @@ bool GraphicsScene::collideWithObjectsInScene(Vehicle* item, CircleItem circle, 
             return true;
         }
     }
-
     return false;
 }
 

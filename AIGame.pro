@@ -25,7 +25,8 @@ SOURCES += main.cpp\
     steeringbehaviors.cpp \
     vectorhelper.cpp \
     vehicle.cpp \
-    circleitem.cpp
+    circleitem.cpp \
+    debugframe.cpp
 
 HEADERS  += mainwindow.h \
     graphicsscene.h \
@@ -39,7 +40,8 @@ HEADERS  += mainwindow.h \
     steeringbehaviors.h \
     vectorhelper.h \
     vehicle.h \
-    circleitem.h
+    circleitem.h \
+    debugframe.h
 
 
 RESOURCES += \
