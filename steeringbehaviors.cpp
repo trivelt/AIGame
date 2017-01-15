@@ -18,9 +18,13 @@ SteeringBehaviors::SteeringBehaviors(Enemy *owner, GraphicsScene *scene, QObject
 
 QVector2D SteeringBehaviors::calculate()
 {
-    QVector2D steeringForce(0,0);
+    QVector2D steeringForce;
+    steeringForce += wallAvoidance();
     steeringForce += obstacleAvoidance();
-    steeringForce += pursuit(hero) * 5;
+    steeringForce += hide(hero);
+    steeringForce += evade(hero);
+    steeringForce += cohesion();
+
 
     VectorHelper::truncateVector(steeringForce, owner->getMaxForce());
     return steeringForce;
@@ -89,7 +93,7 @@ QVector2D SteeringBehaviors::seek(QVector2D targetPosition)
 QVector2D SteeringBehaviors::flee(QVector2D targetPosition)
 {
     qDebug() << "Owner position=" << owner->getPosition() << ", targetPosition=" << targetPosition;
-    const double panicDistanceSq = 100.0 * 100.0;
+    const double panicDistanceSq = 200.0 * 200.0;
     if (VectorHelper::distanceSq(owner->getPosition(), targetPosition) > panicDistanceSq)
     {
         return QVector2D(0.0, 0.0);
@@ -185,6 +189,34 @@ QVector2D SteeringBehaviors::wander()
     return (targetLocal - owner->getPosition());
 }
 
+QVector2D SteeringBehaviors::cohesion()
+{
+    QVector2D centerOfMass, steeringForce;
+    int neighborCount = 0;
+
+    foreach (Vehicle* neighbor, scene->getEnemies())
+    {
+        if(owner == neighbor)
+            continue;
+
+        // instead of tagging neighbors
+        QVector2D distTo = neighbor->getPosition() - owner->getPosition();
+        double range = owner->radius() + neighbor->boundingRadius();
+        if(VectorHelper::lengthSq(distTo) < range*range)
+        {
+            centerOfMass += neighbor->getPosition();
+            neighborCount++;
+        }
+    }
+
+    if(neighborCount > 0)
+    {
+        centerOfMass /= (double) neighborCount;
+        steeringForce = seek(centerOfMass);
+    }
+    return steeringForce;
+}
+
 QVector2D SteeringBehaviors::obstacleAvoidance()
 {
     double minDetectionBoxLength = 40;
@@ -197,12 +229,12 @@ QVector2D SteeringBehaviors::obstacleAvoidance()
     foreach (CircleItem* obstacle, scene->getObstacles())
     {
         // instead of tagging
-        QVector2D distTo = QVector2D(obstacle->pos()) - QVector2D(owner->pos());
+        QVector2D distTo = QVector2D(obstacle->pos()) - QVector2D(owner->getPosition());
         double range = obstacle->boundingRadius() + owner->boundingRadius();
         if(VectorHelper::lengthSq(distTo) < range*range)
         {
 
-            QVector2D localPos = VectorHelper::pointToLocalSpace(QVector2D(obstacle->pos()), owner->getHeading(), owner->getSide(), QVector2D(owner->pos()));
+            QVector2D localPos = VectorHelper::pointToLocalSpace(QVector2D(obstacle->pos()), owner->getHeading(), QVector2D(owner->getPosition()));
             if(localPos.x() >= 0)
             {
                 double expandedRadius = obstacle->boundingRadius() + owner->boundingRadius();
@@ -243,9 +275,92 @@ QVector2D SteeringBehaviors::obstacleAvoidance()
 
     QVector2D localStartPoint(0,0);
 
-    QVector2D worldStartPoint = VectorHelper::pointToWorldSpace(localStartPoint, owner->getHeading(), QVector2D(owner->pos()) );
-    QVector2D worldEndPoint = VectorHelper::pointToWorldSpace(steeringForce, owner->getHeading(), QVector2D(owner->pos()) );
+    QVector2D worldStartPoint = VectorHelper::pointToWorldSpace(localStartPoint, owner->getHeading(), QVector2D(owner->getPosition()) );
+    QVector2D worldEndPoint = VectorHelper::pointToWorldSpace(steeringForce, owner->getHeading(), QVector2D(owner->getPosition()) );
 
     return QVector2D(worldEndPoint-worldStartPoint);
 
+}
+
+QVector2D SteeringBehaviors::wallAvoidance()
+{
+    double wallDetectionFeelerLength = 40;
+    QVector2D centerFeeler(owner->getPosition() + wallDetectionFeelerLength * owner->getHeading());
+    QVector2D leftFeeler = VectorHelper::rotateVector(centerFeeler, 0.785398);
+    QVector2D rightFeeler = VectorHelper::rotateVector(centerFeeler, -0.785398);
+    QList<QVector2D> feelers;
+    feelers.append(centerFeeler);
+    feelers.append(leftFeeler);
+    feelers.append(rightFeeler);
+
+
+    double distToThisIP = 0.0;
+    double distToClosestIP = std::numeric_limits<double>::max();
+    QVector2D steeringForce, closestPoint, closestWall;
+
+    for(int i=0; i<feelers.size(); i++)
+    {
+        QVector2D feeler = feelers[i];
+        QLineF feelerLine(owner->getPosition().x(), owner->getPosition().y(), feeler.x(), feeler.y());
+
+        QLineF leftWall(0, 0, 0, scene->getScreenHeight());
+        QLineF rightWall (scene->getScreenWidth(), 0, scene->getScreenWidth(), scene->getScreenHeight());
+        QLineF topWall(0, 0, scene->getScreenWidth(), 0);
+        QLineF bottomWall(0, scene->getScreenHeight(), scene->getScreenWidth(), scene->getScreenHeight());
+
+        QPointF intersectionPoint;
+
+        if(feelerLine.intersect(leftWall, &intersectionPoint) == QLineF::BoundedIntersection)
+        {
+            distToThisIP = VectorHelper::distance(QVector2D(intersectionPoint), owner->getPosition());
+            if(distToThisIP < distToClosestIP)
+            {
+                distToClosestIP = distToThisIP;
+                closestWall = QVector2D(0, leftWall.y2());
+                closestPoint = QVector2D(intersectionPoint);
+            }
+        }
+
+        if(feelerLine.intersect(rightWall, &intersectionPoint) == QLineF::BoundedIntersection)
+        {
+            distToThisIP = VectorHelper::distance(QVector2D(intersectionPoint), owner->getPosition());
+            if(distToThisIP < distToClosestIP)
+            {
+                distToClosestIP = distToThisIP;
+                closestWall = QVector2D(0, rightWall.y2());
+                closestPoint = QVector2D(intersectionPoint);
+            }
+        }
+
+        if(feelerLine.intersect(topWall, &intersectionPoint) == QLineF::BoundedIntersection)
+        {
+            distToThisIP = VectorHelper::distance(QVector2D(intersectionPoint), owner->getPosition());
+            if(distToThisIP < distToClosestIP)
+            {
+                distToClosestIP = distToThisIP;
+                closestWall = QVector2D(topWall.x2(), 0);
+                closestPoint = QVector2D(intersectionPoint);
+            }
+        }
+
+        if(feelerLine.intersect(bottomWall, &intersectionPoint) == QLineF::BoundedIntersection)
+        {
+            distToThisIP = VectorHelper::distance(QVector2D(intersectionPoint), owner->getPosition());
+            if(distToThisIP < distToClosestIP)
+            {
+                distToClosestIP = distToThisIP;
+                closestWall = QVector2D(bottomWall.x2(), 0);
+                closestPoint = QVector2D(intersectionPoint);
+            }
+        }
+
+
+        if(distToClosestIP < std::numeric_limits<double>::max())
+        {
+            QVector2D overShoot = feeler-QVector2D(closestPoint);
+            steeringForce = VectorHelper::perpendicular(closestWall) * overShoot.length();
+        }
+    }
+
+    return steeringForce;
 }

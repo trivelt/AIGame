@@ -49,7 +49,9 @@ private:
     QVector2D hide(Vehicle *target);
     QVector2D getHidingPosition(const QVector2D& posOb, const double radiusOb, const QVector2D& posTarget);
     QVector2D wander();
+    QVector2D cohesion();
     QVector2D obstacleAvoidance();
+    QVector2D wallAvoidance();
 
 
     Enemy* owner;
