@@ -25,9 +25,10 @@ QVector2D SteeringBehaviors::calculate()
     {
         scene->getDebugFrame()->setDebugText("obst.Avod. frc=" + QString::number(steeringForce.x(), 'f', 2) + ", " + QString::number(steeringForce.y(), 'f', 2));
     }
-//    steeringForce += hide(hero);
-    steeringForce += evade(hero);
-//    steeringForce += cohesion();
+    steeringForce += hide(hero);
+    steeringForce += evade(hero)*4;
+    steeringForce += cohesion();
+//    steeringForce += pursuit(hero);
 
 
     VectorHelper::truncateVector(steeringForce, owner->getMaxForce());
@@ -205,7 +206,7 @@ QVector2D SteeringBehaviors::cohesion()
 
         // instead of tagging neighbors
         QVector2D distTo = neighbor->getPosition() - owner->getPosition();
-        double range = owner->radius() + neighbor->boundingRadius();
+        double range = owner->radius() + neighbor->radius();
         if(VectorHelper::lengthSq(distTo) < range*range)
         {
             centerOfMass += neighbor->getPosition();
@@ -249,7 +250,7 @@ QVector2D SteeringBehaviors::obstacleAvoidance()
     {
         // instead of tagging
         QVector2D distTo = QVector2D(obstacle->pos()) - QVector2D(owner->pos());
-        double range = obstacle->boundingRadius() + owner->radius();
+        double range = obstacle->radius() + owner->radius();
         if(VectorHelper::lengthSq(distTo) < range*range)
         {
             QVector2D localPos = VectorHelper::pointToLocalSpace(QVector2D(obstacle->pos()), owner->getHeading(), QVector2D(owner->getPosition()));
@@ -257,7 +258,7 @@ QVector2D SteeringBehaviors::obstacleAvoidance()
             {
                 QBrush br(Qt::red);
                 obstacle->getGraphicsItem()->setBrush(br);
-                double expandedRadius = obstacle->boundingRadius() + owner->radius();
+                double expandedRadius = obstacle->radius() + owner->radius();
                 if(fabs(localPos.y()) < expandedRadius)
                 {
                     double cX = localPos.x();
@@ -287,10 +288,10 @@ QVector2D SteeringBehaviors::obstacleAvoidance()
     if(closestIntersectingObstacle)
     {
         double multiplier = 1.0 + (dBoxLength - localPosOfClosestObstacle.x()) / dBoxLength;
-        steeringForce.setY( (closestIntersectingObstacle->boundingRadius() - localPosOfClosestObstacle.y()) * multiplier); // boundRadius?
+        steeringForce.setY( ((closestIntersectingObstacle->radius()) - localPosOfClosestObstacle.y()) * multiplier); // boundRadius?
 
         const double breakingWeight = 0.2;
-        steeringForce.setX( (closestIntersectingObstacle->boundingRadius() - localPosOfClosestObstacle.x()) * breakingWeight); // boundingRadius
+        steeringForce.setX( ((closestIntersectingObstacle->radius()) - localPosOfClosestObstacle.x()) * breakingWeight); // boundingRadius
     }
 
     QVector2D localStartPoint(0,0);

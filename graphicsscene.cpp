@@ -114,7 +114,7 @@ void GraphicsScene::showDebugFrame()
     {
         foreach (CircleItem* obstacle, obstacles)
         {
-            CircleItem* boundingRadiusCircle = new CircleItem(obstacle->pos().x(), obstacle->pos().y(), obstacle->boundingRadius());
+            CircleItem* boundingRadiusCircle = new CircleItem(obstacle->pos().x(), obstacle->pos().y(), obstacle->radius()+16);
             QBrush brush(Qt::yellow);
             boundingRadiusCircle->getGraphicsItem()->setBrush(brush);
             boundingRadiusCircle->getGraphicsItem()->setZValue(-10);
@@ -277,11 +277,11 @@ void GraphicsScene::createEnemies(int numberOfEnemies)
 
 void GraphicsScene::createObstacles()
 {
-    Vehicle* obstacle1 = new Vehicle(screenWidth/6, screenHeight/8, 100, this);
+    Vehicle* obstacle1 = new Vehicle(screenWidth/6, screenHeight/8, 50, this);
     Vehicle* obstacle2 = new Vehicle(screenWidth/6, 6*screenHeight/8, 100, this);
     Vehicle* obstacle3 = new Vehicle(4*screenWidth/6, screenHeight/7, 50, this);
-    Vehicle* obstacle4 = new Vehicle(5*screenWidth/6, screenHeight/7, 120, this);
-    Vehicle* obstacle5 = new Vehicle(4*screenWidth/6, 7*screenHeight/8, 100, this);
+    Vehicle* obstacle4 = new Vehicle(5*screenWidth/6, screenHeight/7, 90, this);
+    Vehicle* obstacle5 = new Vehicle(4*screenWidth/6, 7*screenHeight/8, 60, this);
     Vehicle* obstacle6 = new Vehicle(2.5*screenWidth/6, 4*screenHeight/8, 140, this);
 
     obstacles.append(obstacle1);

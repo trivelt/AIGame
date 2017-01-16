@@ -7,9 +7,9 @@
 #include <QTimer>
 
 Enemy::Enemy(GraphicsScene *scene) :
-    Vehicle(0, 0, 15, scene),
+    Vehicle(0, 0, 16, scene),
     maxForce(2),
-    maxSpeed(1.7),
+    maxSpeed(3.7),
     maxTurnRate(100),
     mass(1)
 {
