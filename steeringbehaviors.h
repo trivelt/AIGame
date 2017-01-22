@@ -64,7 +64,7 @@ private:
     double wanderDistance;
     double wanderJitter;
     QVector2D wanderTarget;
-    CircleItem* wanderCircle;
+    bool attackMode;
 
     GraphicsScene* scene;
 };

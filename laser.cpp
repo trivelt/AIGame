@@ -14,7 +14,7 @@ Laser::Laser(GraphicsScene *scene)
 
 void Laser::loadLaser()
 {
-    loadingProgress += 0.1;
+    loadingProgress += 0.4;
 }
 
 double Laser::getLoadingProgress()
@@ -24,8 +24,8 @@ double Laser::getLoadingProgress()
 
 void Laser::shot(QMouseEvent *event)
 {
-//    if(loadingProgress < 100)
-//        return;
+    if(loadingProgress < 100)
+        return;
 
     Hero* hero = scene->getHero();
     double heroCenterX = hero->x();

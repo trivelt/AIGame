@@ -17,7 +17,6 @@ Enemy::Enemy(GraphicsScene *scene) :
     selectedToDebugInfo = false;
     defaultColor = Qt::red;
     setColor(defaultColor);
-    getGraphicsItem()->setZValue(1000);
 }
 
 Enemy *Enemy::createRandomEnemy(GraphicsScene *scene, double screenWidth, double screenHeight)
@@ -56,7 +55,7 @@ void Enemy::updateEnemy(double timeElapsed)
         scene->getDebugFrame()->setAgentTargetVector(heading);
     }
 
-    if(!scene->collideWithObjects(this, QPointF(xMove, yMove)))
+    if(!scene->collideWithObjects(this, QPointF(xMove, yMove), true))
     {
         setPos(pos().x() + xMove, pos().y() + yMove);
         position.setX(pos().x()+xMove);

@@ -15,9 +15,11 @@ SteeringBehaviors::SteeringBehaviors(Enemy *owner, GraphicsScene *scene, QObject
     wanderRadius(5),
     wanderJitter(50),
     wanderDistance(20),
-    wanderCounter(0)
+    attackMode(false)
 {
+    Utils::initRandoms();
     hero = scene->getHero();
+    wanderCounter = (int) Utils::randomInRange(-5000, 10000);
 
     double theta = Utils::randomFloat() * 2*3.14159265359;
     qDebug() << "Theta=" << theta;
@@ -38,29 +40,36 @@ QVector2D SteeringBehaviors::calculate()
 
     if(ownerInGroup())
     {
+        attackMode = true;
+    }
+
+    if(attackMode)
+    {
         steeringForce += cohesion();
         steeringForce += pursuit(hero)*10;
     }
     else
     {
-//        wanderCounter++;
-//        if(wanderCounter >= 1000 && wanderCounter<1500)
-//        {
-//            steeringForce += wander()*4;
-//        }
-//        else if(wanderCounter>=1500)
-//        {
-//            wanderCounter = 0;
-//        }
+        wanderCounter++;
+        if(wanderCounter >= 25000 && wanderCounter<40000)
+        {
+            steeringForce += wander()*10;
+            steeringForce += hide(hero)*3;
+            steeringForce += cohesion()*8;
+        }
+        else
+        {
+            steeringForce += hide(hero)*3;
+            steeringForce += evade(hero)*4;
+            steeringForce += cohesion();
 
-        steeringForce += hide(hero)*3;
-        steeringForce += evade(hero)*4;
-        steeringForce += cohesion();
+            if(wanderCounter>=40000)
+            {
+                wanderCounter = 0;
+            }
+        }
+
     }
-
-//    steeringForce += pursuit(hero)*10;
-//    steeringForce += wander();
-
 
     VectorHelper::truncateVector(steeringForce, owner->getMaxForce());
     return steeringForce;
