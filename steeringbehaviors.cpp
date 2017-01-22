@@ -17,7 +17,6 @@ SteeringBehaviors::SteeringBehaviors(Enemy *owner, GraphicsScene *scene, QObject
     wanderDistance(20),
     attackMode(false)
 {
-    Utils::initRandoms();
     hero = scene->getHero();
     wanderCounter = (int) Utils::randomInRange(-5000, 10000);
 
