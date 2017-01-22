@@ -11,9 +11,19 @@
 SteeringBehaviors::SteeringBehaviors(Enemy *owner, GraphicsScene *scene, QObject *parent) :
     QObject(parent),
     scene(scene),
-    owner(owner)
+    owner(owner),
+    wanderRadius(5),
+    wanderJitter(50),
+    wanderDistance(20),
+    wanderCounter(0)
 {
     hero = scene->getHero();
+
+    double theta = Utils::randomFloat() * 2*3.14159265359;
+    qDebug() << "Theta=" << theta;
+    wanderTarget = QVector2D(wanderRadius * cos(theta),
+                                wanderRadius * sin(theta));
+    qDebug() << "Init wanderTarget=" << wanderTarget;
 }
 
 QVector2D SteeringBehaviors::calculate()
@@ -25,10 +35,31 @@ QVector2D SteeringBehaviors::calculate()
     {
         scene->getDebugFrame()->setDebugText("obst.Avod. frc=" + QString::number(steeringForce.x(), 'f', 2) + ", " + QString::number(steeringForce.y(), 'f', 2));
     }
-    steeringForce += hide(hero);
-    steeringForce += evade(hero)*4;
-    steeringForce += cohesion();
-//    steeringForce += pursuit(hero);
+
+    if(ownerInGroup())
+    {
+        steeringForce += cohesion();
+        steeringForce += pursuit(hero)*10;
+    }
+    else
+    {
+//        wanderCounter++;
+//        if(wanderCounter >= 1000 && wanderCounter<1500)
+//        {
+//            steeringForce += wander()*4;
+//        }
+//        else if(wanderCounter>=1500)
+//        {
+//            wanderCounter = 0;
+//        }
+
+        steeringForce += hide(hero)*3;
+        steeringForce += evade(hero)*4;
+        steeringForce += cohesion();
+    }
+
+//    steeringForce += pursuit(hero)*10;
+//    steeringForce += wander();
 
 
     VectorHelper::truncateVector(steeringForce, owner->getMaxForce());
@@ -87,6 +118,26 @@ void SteeringBehaviors::fleeOff()
 void SteeringBehaviors::arriveOff()
 {
 
+}
+
+bool SteeringBehaviors::ownerInGroup()
+{
+    double range = owner->radius()*2 + 200;
+
+    int neighborCount = 0;
+    foreach (Vehicle* neighbor, scene->getEnemies())
+    {
+        if(owner == neighbor)
+            continue;
+
+        QVector2D distTo = neighbor->getPosition() - owner->getPosition();
+        if(VectorHelper::lengthSq(distTo) < range*range)
+        {
+            neighborCount++;
+        }
+    }
+    qDebug() << "neighborCount=" << neighborCount;
+    return (neighborCount >= 6);
 }
 
 QVector2D SteeringBehaviors::seek(QVector2D targetPosition)
@@ -184,14 +235,16 @@ QVector2D SteeringBehaviors::getHidingPosition(const QVector2D &posOb, const dou
 
 QVector2D SteeringBehaviors::wander()
 {
-    wanderTarget += QVector2D(Utils::randomClamped() * wanderJitter,
+    QVector2D vectorToAdd= QVector2D(Utils::randomClamped() * wanderJitter,
                               Utils::randomClamped() * wanderJitter);
-    wanderTarget.normalize();
+    wanderTarget += vectorToAdd;
+    wanderTarget = VectorHelper::normalize(wanderTarget);
     wanderTarget *= wanderRadius;
 
     QVector2D targetLocal = wanderTarget + QVector2D(wanderDistance, 0);
-//    QVector2D targetWorld;
-    return (targetLocal - owner->getPosition());
+    QVector2D targetWorld = VectorHelper::pointToWorldSpace(targetLocal, owner->getHeading(), owner->getPosition());
+
+    return (targetWorld - owner->getPosition());
 }
 
 QVector2D SteeringBehaviors::cohesion()
@@ -229,7 +282,7 @@ QVector2D SteeringBehaviors::obstacleAvoidance()
 
     if(DebugFrame::debugMode())
     {
-        qDebug() << "Position=" << owner->getPosition() << ", pos=" << owner->pos();
+//        qDebug() << "Position=" << owner->getPosition() << ", pos=" << owner->pos();
         QGraphicsRectItem* rect = new QGraphicsRectItem(owner->pos().x(), owner->pos().y()-owner->radius(), dBoxLength, owner->radius()*2);
         rect->setTransformOriginPoint(owner->pos());
         rect->setRotation(VectorHelper::vectorToAngleDeg(owner->getHeading()));
@@ -368,7 +421,7 @@ QVector2D SteeringBehaviors::wallAvoidance()
             {
                 distToClosestIP = distToThisIP;
                 closestPoint = QVector2D(intersectionPoint);
-                qDebug() << "LEFT WALL, distToClosestIP=" << distToClosestIP << ", intersectionPoint=" << intersectionPoint;
+//                qDebug() << "LEFT WALL, distToClosestIP=" << distToClosestIP << ", intersectionPoint=" << intersectionPoint;
             }
         }
 
@@ -379,7 +432,7 @@ QVector2D SteeringBehaviors::wallAvoidance()
             {
                 distToClosestIP = distToThisIP;
                 closestPoint = QVector2D(intersectionPoint);
-                qDebug() << "RIGHT WALL, distToClosestIP=" << distToClosestIP << ", intersectionPoint=" << intersectionPoint;
+//                qDebug() << "RIGHT WALL, distToClosestIP=" << distToClosestIP << ", intersectionPoint=" << intersectionPoint;
 
             }
         }
@@ -391,7 +444,7 @@ QVector2D SteeringBehaviors::wallAvoidance()
             {
                 distToClosestIP = distToThisIP;
                 closestPoint = QVector2D(intersectionPoint);
-                qDebug() << "TOP WALL, distToClosestIP=" << distToClosestIP << ", intersectionPoint=" << intersectionPoint;
+//                qDebug() << "TOP WALL, distToClosestIP=" << distToClosestIP << ", intersectionPoint=" << intersectionPoint;
 
             }
         }
@@ -403,7 +456,7 @@ QVector2D SteeringBehaviors::wallAvoidance()
             {
                 distToClosestIP = distToThisIP;
                 closestPoint = QVector2D(intersectionPoint);
-                qDebug() << "BOTTOM WALL, distToClosestIP=" << distToClosestIP << ", intersectionPoint=" << intersectionPoint;
+//                qDebug() << "BOTTOM WALL, distToClosestIP=" << distToClosestIP << ", intersectionPoint=" << intersectionPoint;
 
             }
         }
@@ -412,9 +465,9 @@ QVector2D SteeringBehaviors::wallAvoidance()
         if(distToClosestIP < std::numeric_limits<double>::max())
         {
             QVector2D overShoot = feeler-QVector2D(closestPoint);
-            qDebug() << "overshoot length= " << overShoot.length();
-            qDebug() << "perpendicular to the closest=" << VectorHelper::perpendicular(closestPoint);
-            qDebug() << "Closest point=" << closestPoint;
+//            qDebug() << "overshoot length= " << overShoot.length();
+//            qDebug() << "perpendicular to the closest=" << VectorHelper::perpendicular(closestPoint);
+//            qDebug() << "Closest point=" << closestPoint;
             steeringForce = VectorHelper::perpendicular(closestPoint-owner->getPosition()) * overShoot.length();
         }
     }

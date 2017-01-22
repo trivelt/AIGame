@@ -36,6 +36,8 @@ public:
     void fleeOff();
     void arriveOff();
 
+    bool ownerInGroup();
+
 signals:
 
 public slots:
@@ -57,10 +59,12 @@ private:
     Enemy* owner;
     Vehicle* hero;
 
+    int wanderCounter;
     double wanderRadius;
     double wanderDistance;
     double wanderJitter;
     QVector2D wanderTarget;
+    CircleItem* wanderCircle;
 
     GraphicsScene* scene;
 };

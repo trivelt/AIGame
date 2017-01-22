@@ -56,6 +56,33 @@ void Hero::processKeyEvent(QKeyEvent *event)
 //    scene->removeItem(rect);
 
 
+
+//    double wanderDistance = 50;
+//    double wanderRadius = 30;
+
+//    CircleItem* wanderCircle = new CircleItem(pos().x() + radius() + wanderDistance, pos().y(), wanderRadius);
+//    wanderCircle->getGraphicsItem()->setTransformOriginPoint(pos());
+//    wanderCircle->getGraphicsItem()->setRotation(VectorHelper::vectorToAngleDeg(getHeading()));
+//    QPen pen;
+//    pen.setColor(Qt::red);
+//    pen.setWidth(1);
+//    wanderCircle->getGraphicsItem()->setPen(pen);
+//    scene->addItem(wanderCircle->getGraphicsItem());
+
+
+//    QGraphicsRectItem* rect = new QGraphicsRectItem(pos().x()+radius()+wanderDistance, pos().y()-radius(), 40, radius()*2);
+//    rect->setTransformOriginPoint(pos());
+//    rect->setRotation(VectorHelper::vectorToAngleDeg(getHeading()));
+//    QPen pen;
+//    pen.setColor(Qt::red);
+//    pen.setWidth(1);
+//    rect->setPen(pen);
+//    rect->setOpacity(0.1);
+//    scene->addItem(rect);
+
+
+
+
     double wallDetectionFeelerLength = 60;
     QVector2D centerFeeler(getPosition() + wallDetectionFeelerLength * getHeading());
     QVector2D centerFeelerToRotations(getPosition() + 40 * getHeading());

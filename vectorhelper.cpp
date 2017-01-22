@@ -112,7 +112,7 @@ QVector2D VectorHelper::pointToWorldSpace(const QVector2D &point, QVector2D head
     double angle = atan2(heading.y(), heading.x());
 
     double rotatedX = point.x()*cos(angle) - point.y()*sin(angle) + pos.x();
-    double rotatedY = point.x()*sin(angle) - point.y()*cos(angle) + pos.x();
+    double rotatedY = point.x()*sin(angle) - point.y()*cos(angle) + pos.y();
 //    double rotatedX = cos(-angle)*relativeX - sin(-angle)*relativeY;
 //    double rotatedY = cos(-angle)*relativeY + sin(-angle)*relativeX;
 

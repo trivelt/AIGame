@@ -45,8 +45,8 @@ void Enemy::removeFromScene()
 
 void Enemy::updateEnemy(double timeElapsed)
 {
-    qDebug() << "\n============= updateEnemy() called ================";
-    qDebug() << "Before calling updateAI, owner velocity=" << getVelocity() << " (" << velocity << ")";
+//    qDebug() << "\n============= updateEnemy() called ================";
+//    qDebug() << "Before calling updateAI, owner velocity=" << getVelocity() << " (" << velocity << ")";
     updateAI(timeElapsed);
     double xMove = heading.x() * getSpeed();
     double yMove = heading.y() * getSpeed();
@@ -67,9 +67,9 @@ void Enemy::updateEnemy(double timeElapsed)
 void Enemy::updateAI(double timeElapsed)
 {
     QVector2D steeringForce = steering->calculate();
-    qDebug() << "Calculated steering force=" << steeringForce;
+//    qDebug() << "Calculated steering force=" << steeringForce;
     QVector2D acceleration = steeringForce / mass;
-    qDebug() << "Calculated acceleration = " << acceleration;
+//    qDebug() << "Calculated acceleration = " << acceleration;
 
     // update velocity
     velocity += acceleration*timeElapsed;

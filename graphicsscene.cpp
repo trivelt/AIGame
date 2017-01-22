@@ -28,7 +28,7 @@ GraphicsScene::GraphicsScene(int x, int y, int width, int height)
     hero = new Hero(this);
     hero->setPos(hero->radius(), hero->radius());
 
-    createEnemies(3);
+    createEnemies(18);
     laser = new Laser(this);
 }
 
