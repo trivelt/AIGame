@@ -31,44 +31,45 @@ QVector2D SteeringBehaviors::calculate()
 {
     QVector2D steeringForce;
     steeringForce += wallAvoidance();
-    steeringForce += obstacleAvoidance();
+    steeringForce += obstacleAvoidance() * 100;
     if(owner->isSelectedToDebugInfo())
     {
         scene->getDebugFrame()->setDebugText("obst.Avod. frc=" + QString::number(steeringForce.x(), 'f', 2) + ", " + QString::number(steeringForce.y(), 'f', 2));
     }
 
-    if(ownerInGroup())
-    {
-        attackMode = true;
-    }
+    steeringForce += wander();
+//    if(ownerInGroup())
+//    {
+//        attackMode = true;
+//    }
 
-    if(attackMode)
-    {
-        steeringForce += cohesion();
-        steeringForce += pursuit(hero)*10;
-    }
-    else
-    {
-        wanderCounter++;
-        if(wanderCounter >= 25000 && wanderCounter<40000)
-        {
-            steeringForce += wander()*10;
-            steeringForce += hide(hero)*3;
-            steeringForce += cohesion()*8;
-        }
-        else
-        {
-            steeringForce += hide(hero)*3;
-            steeringForce += evade(hero)*4;
-            steeringForce += cohesion();
+//    if(attackMode)
+//    {
+//        steeringForce += cohesion();
+//        steeringForce += pursuit(hero)*10;
+//    }
+//    else
+//    {
+//        wanderCounter++;
+//        if(wanderCounter >= 25000 && wanderCounter<40000)
+//        {
+//            steeringForce += wander()*10;
+//            steeringForce += hide(hero)*3;
+//            steeringForce += cohesion()*8;
+//        }
+//        else
+//        {
+//            steeringForce += hide(hero)*3;
+//            steeringForce += evade(hero)*4;
+//            steeringForce += cohesion();
 
-            if(wanderCounter>=40000)
-            {
-                wanderCounter = 0;
-            }
-        }
+//            if(wanderCounter>=40000)
+//            {
+//                wanderCounter = 0;
+//            }
+//        }
 
-    }
+//    }
 
     VectorHelper::truncateVector(steeringForce, owner->getMaxForce());
     return steeringForce;
@@ -243,6 +244,7 @@ QVector2D SteeringBehaviors::getHidingPosition(const QVector2D &posOb, const dou
 
 QVector2D SteeringBehaviors::wander()
 {
+    return QVector2D(1,0);
     QVector2D vectorToAdd= QVector2D(Utils::randomClamped() * wanderJitter,
                               Utils::randomClamped() * wanderJitter);
     wanderTarget += vectorToAdd;
@@ -310,10 +312,16 @@ QVector2D SteeringBehaviors::obstacleAvoidance()
     foreach (CircleItem* obstacle, scene->getObstacles())
     {
         // instead of tagging
-        QVector2D distTo = QVector2D(obstacle->pos()) - QVector2D(owner->pos());
+        QVector2D distTo = QVector2D(obstacle->pos()) - QVector2D(owner->getPosition());
+        qDebug() << "obstaclePos=" << obstacle->pos() << ", ownerPos=" << owner->pos() <<
+                    ", ownerPosition=" << owner->getPosition() << ", distToWithPosition=" << distTo <<
+                    ", distToUsingOwnerPos= " <<  QVector2D(obstacle->pos()) - QVector2D(owner->pos())  ;
         double range = obstacle->radius() + owner->radius();
         if(VectorHelper::lengthSq(distTo) < range*range)
         {
+            qDebug() << "HEREobstacle";
+//            return QVector2D(0,-1);
+
             QVector2D localPos = VectorHelper::pointToLocalSpace(QVector2D(obstacle->pos()), owner->getHeading(), QVector2D(owner->getPosition()));
             if(localPos.x() >= 0)
             {

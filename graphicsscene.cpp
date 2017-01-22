@@ -28,7 +28,7 @@ GraphicsScene::GraphicsScene(int x, int y, int width, int height)
     hero = new Hero(this);
     hero->setPos(hero->radius(), hero->radius());
 
-    createEnemies(18);
+    createEnemies(1);
     laser = new Laser(this);
 }
 
@@ -266,11 +266,11 @@ void GraphicsScene::createEnemies(int numberOfEnemies)
     for(int i=0; i<numberOfEnemies; i++)
     {
         Enemy* enemy = Enemy::createRandomEnemy(this, screenWidth, screenHeight);
-
-        if(i==0 && DebugFrame::debugMode())
-        {
-            enemy->selectToDebugInfo(true);
-        }
+        enemy->setPos(20,250);
+//        if(i==0 && DebugFrame::debugMode())
+//        {
+//            enemy->selectToDebugInfo(true);
+//        }
         enemies.append(enemy);
     }
 }
@@ -280,7 +280,7 @@ void GraphicsScene::createObstacles()
     Vehicle* obstacle1 = new Vehicle(screenWidth/6, screenHeight/8, 50, this);
     Vehicle* obstacle2 = new Vehicle(screenWidth/6, 6*screenHeight/8, 100, this);
     Vehicle* obstacle3 = new Vehicle(4*screenWidth/6, screenHeight/7, 50, this);
-    Vehicle* obstacle4 = new Vehicle(5*screenWidth/6, screenHeight/7, 90, this);
+    Vehicle* obstacle4 = new Vehicle(5*screenWidth/6, 3*screenHeight/7, 90, this);
     Vehicle* obstacle5 = new Vehicle(4*screenWidth/6, 7*screenHeight/8, 60, this);
     Vehicle* obstacle6 = new Vehicle(2.5*screenWidth/6, 4*screenHeight/8, 140, this);
 
@@ -290,6 +290,9 @@ void GraphicsScene::createObstacles()
     obstacles.append(obstacle4);
     obstacles.append(obstacle5);
     obstacles.append(obstacle6);
+
+//    obstacle4->setColor(Qt::red);
+
 }
 
 bool GraphicsScene::collideWithObjects(Vehicle *item, QPointF translationVector, bool enemy)
